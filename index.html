@@ -1,0 +1,1685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>CricMatch Pro - Pitch Precision Mobile App</title>
+  
+  <!-- Favicon / Sports Cricket Icon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23135d38'><path d='M18.5 2a3.5 3.5 0 0 1 3.5 3.5c0 1.25-.66 2.35-1.64 2.96l-7.79 7.79a3 3 0 0 1-4.24 0l-3.08-3.08a3 3 0 0 1 0-4.24l7.79-7.79C13.65 2.16 14.75 1.5 16 1.5c.87 0 1.68.32 2.3.85L18.5 2z'/></svg>" />
+
+  <!-- Google Fonts: Plus Jakarta Sans & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Material Symbols Outlined -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN (v3 with forms & container queries plugin) -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#004425",
+            "primary-container": "#135d38",
+            "on-primary": "#ffffff",
+            "on-primary-container": "#8dd4a5",
+            "primary-fixed": "#abf3c2",
+            "primary-fixed-dim": "#8fd6a7",
+            "secondary": "#855300",
+            "secondary-container": "#fea619",
+            "on-secondary": "#ffffff",
+            "on-secondary-fixed": "#2a1700",
+            "on-secondary-fixed-variant": "#653e00",
+            "secondary-fixed": "#ffddb8",
+            "secondary-fixed-dim": "#ffb95f",
+            "tertiary": "#0c4327",
+            "tertiary-container": "#285b3d",
+            "on-tertiary": "#ffffff",
+            "on-tertiary-container": "#9ad1ab",
+            "background": "#f3faff",
+            "surface": "#f3faff",
+            "surface-dim": "#d2dbe1",
+            "surface-bright": "#f3faff",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-low": "#ecf5fa",
+            "surface-container": "#e6eff5",
+            "surface-container-high": "#e0eaef",
+            "surface-container-highest": "#dae4e9",
+            "surface-variant": "#dae4e9",
+            "on-surface": "#141d21",
+            "on-surface-variant": "#404941",
+            "outline": "#707971",
+            "outline-variant": "#bfc9bf",
+            "error": "#ba1a1a",
+            "error-container": "#ffdad6",
+            "on-error": "#ffffff",
+            "on-error-container": "#93000a"
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "2xl": "1rem",
+            "full": "9999px"
+          },
+          spacing: {
+            "space-xs": "0.25rem",
+            "space-sm": "0.5rem",
+            "space-md": "1rem",
+            "space-lg": "1.5rem",
+            "space-xl": "2rem",
+            "margin": "1rem",
+            "margin-tablet": "1.5rem",
+            "gutter": "1rem",
+            "gutter-sm": "0.75rem"
+          },
+          fontFamily: {
+            "headline-xl": ["Plus Jakarta Sans", "sans-serif"],
+            "headline-lg": ["Plus Jakarta Sans", "sans-serif"],
+            "headline-md": ["Plus Jakarta Sans", "sans-serif"],
+            "headline-sm": ["Plus Jakarta Sans", "sans-serif"],
+            "body-lg": ["Inter", "sans-serif"],
+            "body-md": ["Inter", "sans-serif"],
+            "body-sm": ["Inter", "sans-serif"],
+            "label-lg": ["Plus Jakarta Sans", "sans-serif"],
+            "label-md": ["Plus Jakarta Sans", "sans-serif"],
+            "label-sm": ["Plus Jakarta Sans", "sans-serif"],
+            "metric-display": ["Plus Jakarta Sans", "sans-serif"]
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- Custom Stylesheet (Phone Shell, Shadows, Modals, Keypad) -->
+  <link rel="stylesheet" href="css/app.css" />
+</head>
+
+<body class="device-view selection:bg-primary selection:text-white">
+
+  <!-- Desktop View Mode Floating Switcher -->
+  <header class="device-toolbar">
+    <button id="btn-view-phone" class="active-tool" onclick="window.CricApp.setViewMode('phone')" title="Mobile iPhone Frame View">
+      <span class="material-symbols-outlined text-[16px]">smartphone</span>
+      <span>Mobile Frame</span>
+    </button>
+    <button id="btn-view-full" onclick="window.CricApp.setViewMode('full')" title="Full Screen Responsive View">
+      <span class="material-symbols-outlined text-[16px]">fullscreen</span>
+      <span>Full Screen</span>
+    </button>
+  </header>
+
+  <!-- Device Shell Wrapper -->
+  <div class="device-wrapper">
+    <div class="device-frame">
+      
+      <!-- Phone Dynamic Island -->
+      <div class="phone-island">
+        <div class="w-3 h-3 rounded-full bg-[#135d38] flex items-center justify-center">
+          <span class="w-1.5 h-1.5 rounded-full bg-[#8dd4a5] animate-ping"></span>
+        </div>
+        <div class="w-2.5 h-2.5 rounded-full bg-[#111827] ring-1 ring-white/10"></div>
+      </div>
+
+      <!-- Phone Status Bar -->
+      <div class="phone-status-bar">
+        <span id="phone-time">9:41</span>
+        <div class="flex items-center gap-1.5 text-on-surface">
+          <span class="text-[10px] font-bold tracking-tight">5G</span>
+          <span class="material-symbols-outlined text-[15px]">signal_cellular_4_bar</span>
+          <span class="material-symbols-outlined text-[15px]">wifi</span>
+          <span class="material-symbols-outlined text-[17px]">battery_full</span>
+        </div>
+      </div>
+
+      <!-- Toast Container (Absolute over viewport) -->
+      <div id="toast-container"></div>
+
+      <!-- App Viewport (Scrollable container for all screens) -->
+      <main id="app-viewport" class="app-viewport custom-scroll">
+
+        <!-- ========================================================================= -->
+        <!-- SCREEN 1: TOURNAMENT HUB (Spotlight, Filter Chips, Tournament Cards, FAB) -->
+        <!-- ========================================================================= -->
+        <section id="screen-hub" class="screen-view active pb-28">
+          <!-- Top App Bar -->
+          <header class="sticky top-0 z-40 bg-surface shadow-sm border-b border-surface-variant flex justify-between items-center w-full px-margin h-14">
+            <!-- Brand -->
+            <div class="flex items-center space-x-2">
+              <div class="w-9 h-9 rounded-lg bg-primary-container flex items-center justify-center text-on-primary shadow-sm cursor-pointer" onclick="window.CricApp.navigateTo('hub')">
+                <span class="material-symbols-outlined text-[20px]" data-icon="sports_cricket">sports_cricket</span>
+              </div>
+              <span class="text-headline-sm font-headline-sm text-primary tracking-tight font-bold">CricMatch Pro</span>
+            </div>
+            <!-- Trailing Action Icons & Profile -->
+            <div class="flex items-center space-x-2">
+              <button aria-label="Notifications" class="relative p-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors duration-150 active:scale-95" onclick="window.CricApp.openNotificationsModal()">
+                <span class="material-symbols-outlined text-[22px]">notifications</span>
+                <span class="absolute top-2 right-2 w-2 h-2 rounded-full bg-error ring-2 ring-surface"></span>
+              </button>
+              <!-- Director Avatar -->
+              <div class="relative w-8 h-8 rounded-full ring-2 ring-primary-container/30 overflow-hidden ml-1 cursor-pointer" onclick="window.CricApp.openNotificationsModal()">
+                <img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDztwQ_VyDNyMJ-x7vySt4scNralgufLOHDebsImMk2Mwr3eRHOHNlBjTLrdFKaYRpJRUmPuIJuyHmtUwikvZEmWdBnqTdA8BjulnM5Y1My8FfK1gqf8Ng6krmE3SvaemSbONOj46XQvBh1q7eg3xnem-u2DgZLvhPnRhvEuJVz9mFWqht-qyGUOjym9cJ95qI8knSUIME4g7DxYlbwru4vH278NP4v9kQu2KUl95dZce75jidOh26Yyw" alt="Tournament Director" />
+              </div>
+            </div>
+          </header>
+
+          <!-- Main Content Body -->
+          <div class="px-margin pt-space-md space-y-space-lg">
+            
+            <!-- Search Bar Component -->
+            <div>
+              <div class="relative flex items-center w-full">
+                <span class="material-symbols-outlined absolute left-3.5 text-outline text-[20px]">search</span>
+                <input id="hub-search-input" class="w-full pl-10 pr-10 py-2.5 rounded-xl bg-surface-container-lowest border border-outline-variant/60 text-on-surface text-body-md font-body-md placeholder:text-outline focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-all shadow-sm" placeholder="Search tournaments, teams, grounds..." type="search" />
+                <button aria-label="Filter Search" class="absolute right-3 p-1 text-on-surface-variant hover:text-primary transition-colors" onclick="window.CricApp.showToast('Search filter: Sorting by Active and Upcoming', 'filter_list')">
+                  <span class="material-symbols-outlined text-[18px]">tune</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Featured Tournament Banner Carousel -->
+            <section class="space-y-space-xs">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-1.5">
+                  <span class="w-2 h-2 rounded-full bg-secondary-container"></span>
+                  <h2 class="text-label-md font-label-md text-on-surface-variant uppercase tracking-wider font-bold">Spotlight Championship</h2>
+                </div>
+                <div class="flex items-center space-x-1 text-label-sm font-label-sm text-primary font-bold">
+                  <button class="p-1 hover:text-secondary" onclick="window.CricApp.updateSpotlightSlide(window.CricData.spotlightTournaments ? -1 : 0)">
+                    <span class="material-symbols-outlined text-[16px]">chevron_left</span>
+                  </button>
+                  <span id="spotlight-counter">1 / 3</span>
+                  <button class="p-1 hover:text-secondary" onclick="window.CricApp.updateSpotlightSlide(1)">
+                    <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Featured Card Dynamic Container -->
+              <div id="spotlight-banner-content" class="relative overflow-hidden rounded-xl bg-gradient-to-br from-primary via-primary-container to-tertiary text-on-primary p-space-md featured-banner-shadow transition-all duration-300">
+                <!-- Injected by updateSpotlightSlide -->
+              </div>
+            </section>
+
+            <!-- Filter Chips (Horizontal Scrollable) -->
+            <section>
+              <div class="flex items-center space-x-2 overflow-x-auto custom-scroll py-1">
+                <button class="hub-filter-chip px-4 py-1.5 rounded-full bg-primary-container text-white text-label-md font-label-md whitespace-nowrap shadow-sm" data-filter="all">
+                  All Tournaments
+                </button>
+                <button class="hub-filter-chip px-4 py-1.5 rounded-full bg-surface-container-lowest border border-outline-variant text-on-surface-variant hover:bg-surface-container-low text-label-md font-label-md whitespace-nowrap transition-colors" data-filter="upcoming">
+                  Upcoming
+                </button>
+                <button class="hub-filter-chip px-3.5 py-1.5 rounded-full bg-surface-container-lowest border border-outline-variant text-on-surface-variant hover:bg-surface-container-low text-label-md font-label-md whitespace-nowrap flex items-center space-x-1.5 transition-colors" data-filter="live">
+                  <span class="w-2 h-2 rounded-full bg-secondary-container animate-pulse"></span>
+                  <span>Live (2)</span>
+                </button>
+                <button class="hub-filter-chip px-4 py-1.5 rounded-full bg-surface-container-lowest border border-outline-variant text-on-surface-variant hover:bg-surface-container-low text-label-md font-label-md whitespace-nowrap transition-colors" data-filter="completed">
+                  Completed
+                </button>
+              </div>
+            </section>
+
+            <!-- Tournament Cards Section -->
+            <section class="space-y-space-md">
+              <div class="flex items-center justify-between">
+                <h2 class="text-headline-sm font-headline-sm text-on-background font-bold">Upcoming &amp; New</h2>
+                <a id="tournaments-count-header" class="text-label-md font-label-md text-primary-container hover:underline flex items-center font-bold" href="#tournaments" onclick="window.CricApp.showToast('Showing all registered tournament fixtures', 'list')">
+                  See All (6)
+                </a>
+              </div>
+
+              <!-- Dynamic Tournament Cards Container -->
+              <div id="tournaments-list-container" class="space-y-space-md">
+                <!-- Rendered dynamically by renderTournamentsList -->
+              </div>
+            </section>
+          </div>
+
+          <!-- Contextual Floating Action Button (FAB) -->
+          <div class="fixed bottom-20 right-4 z-40">
+            <button aria-label="Create Tournament" class="flex items-center space-x-2 bg-secondary-container hover:bg-secondary-fixed-dim text-on-secondary-fixed px-4 py-3 rounded-full fab-elevation active:scale-95 transition-transform" onclick="window.CricApp.openCreateTourneyModal()">
+              <span class="material-symbols-outlined text-[20px]">add</span>
+              <span class="text-label-lg font-label-lg font-bold">Create Tournament</span>
+            </button>
+          </div>
+        </section>
+
+        <!-- ========================================================================= -->
+        <!-- SCREEN 2: TOURNAMENT DETAILS & VENUE                                      -->
+        <!-- ========================================================================= -->
+        <section id="screen-details" class="screen-view pb-32">
+          <!-- Top App Bar -->
+          <header class="sticky top-0 z-40 bg-surface shadow-sm px-margin h-14 flex items-center justify-between border-b border-surface-variant">
+            <div class="flex items-center gap-space-sm">
+              <button aria-label="Go back" class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container-low transition-colors duration-150 active:scale-95" type="button" onclick="window.CricApp.goBack()">
+                <span class="material-symbols-outlined">arrow_back</span>
+              </button>
+              <div class="flex flex-col">
+                <h1 id="details-page-title" class="font-headline-sm text-headline-sm text-primary tracking-tight truncate max-w-[210px] sm:max-w-md font-bold">
+                  Premier Championship 2025
+                </h1>
+                <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Tournament Portal</span>
+              </div>
+            </div>
+            <div class="flex items-center gap-space-xs">
+              <button aria-label="Share Tournament" class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container-low transition-colors duration-150 active:scale-95" type="button" onclick="window.CricApp.shareTournament()">
+                <span class="material-symbols-outlined">share</span>
+              </button>
+              <button aria-label="Bookmark" class="w-10 h-10 rounded-full flex items-center justify-center text-primary hover:bg-surface-container-low transition-colors duration-150 active:scale-95" type="button" onclick="window.CricApp.toggleBookmark()">
+                <span id="details-bookmark-icon" class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">bookmark</span>
+              </button>
+            </div>
+          </header>
+
+          <!-- Main Content Canvas -->
+          <div class="max-w-5xl mx-auto px-margin pt-space-md space-y-space-lg">
+            
+            <!-- Tournament Hero Banner Card -->
+            <section class="relative overflow-hidden rounded-xl bg-gradient-to-br from-primary via-primary-container to-tertiary text-on-primary p-space-md sm:p-space-lg shadow-md border border-primary-container">
+              <div class="absolute -right-8 -bottom-10 opacity-10 pointer-events-none">
+                <span class="material-symbols-outlined text-[190px]">emoji_events</span>
+              </div>
+              <div class="relative z-10 flex flex-col gap-space-md">
+                <!-- Status & Badge Header -->
+                <div class="flex flex-wrap items-center justify-between gap-space-sm">
+                  <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary-container text-on-secondary-fixed shadow-sm">
+                    <span class="w-2 h-2 rounded-full bg-surface-container-lowest animate-ping"></span>
+                    <span class="font-label-sm text-label-sm tracking-wider uppercase font-bold">Registration Open (4 slots left)</span>
+                  </div>
+                  <div class="flex items-center gap-1 text-primary-fixed font-label-md text-label-md bg-tertiary-container/60 px-2.5 py-0.5 rounded-lg border border-primary-fixed-dim/30">
+                    <span class="material-symbols-outlined text-[16px]">verified</span>
+                    <span>Official T20 Cup</span>
+                  </div>
+                </div>
+                <!-- Tournament Title & Prize Callout -->
+                <div class="flex flex-col md:flex-row md:items-end justify-between gap-space-md">
+                  <div class="space-y-1">
+                    <span class="font-label-sm text-label-sm text-primary-fixed tracking-widest uppercase">Division 1 Professional League</span>
+                    <h2 id="details-hero-title" class="font-headline-xl text-2xl md:text-3xl font-extrabold text-surface-container-lowest tracking-tight">
+                      Premier Championship 2025
+                    </h2>
+                  </div>
+                  <div class="bg-surface-container-lowest/10 backdrop-blur-md border border-white/20 rounded-xl p-3 px-4 min-w-[160px] self-start md:self-auto">
+                    <span class="font-label-sm text-label-sm text-primary-fixed uppercase tracking-wider block">Total Prize Pool</span>
+                    <span class="font-metric-display text-3xl font-extrabold text-secondary-fixed tracking-tight">$15,000</span>
+                  </div>
+                </div>
+                <!-- Meta Information Strip -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-space-sm pt-space-xs border-t border-white/15">
+                  <div class="flex items-center gap-2 text-surface-bright">
+                    <span class="material-symbols-outlined text-primary-fixed-dim">calendar_month</span>
+                    <span id="details-hero-dates" class="font-body-md text-body-md">Oct 15 - Oct 28, 2025</span>
+                  </div>
+                  <div class="flex items-center gap-2 text-surface-bright">
+                    <span class="material-symbols-outlined text-primary-fixed-dim">stadium</span>
+                    <span id="details-hero-venue" class="font-body-md text-body-md truncate">National Cricket Arena, Green Park</span>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- Interactive Navigation Tabs -->
+            <nav aria-label="Tournament Sections" class="flex items-center gap-2 overflow-x-auto pb-1 custom-scroll">
+              <button class="details-nav-tab px-4 py-2 rounded-lg font-label-lg text-label-lg whitespace-nowrap bg-primary-container text-on-primary shadow-sm transition-all duration-150" data-subtab="overview" onclick="window.CricApp.setDetailsTab('overview')">
+                Overview
+              </button>
+              <button class="details-nav-tab px-4 py-2 rounded-lg font-label-lg text-label-lg whitespace-nowrap text-on-surface-variant hover:bg-surface-container-low transition-colors duration-150" data-subtab="fixtures" onclick="window.CricApp.setDetailsTab('fixtures')">
+                Fixtures
+              </button>
+              <button class="details-nav-tab px-4 py-2 rounded-lg font-label-lg text-label-lg whitespace-nowrap text-on-surface-variant hover:bg-surface-container-low transition-colors duration-150" data-subtab="teams" onclick="window.CricApp.setDetailsTab('teams')">
+                Teams
+              </button>
+              <button class="details-nav-tab px-4 py-2 rounded-lg font-label-lg text-label-lg whitespace-nowrap text-on-surface-variant hover:bg-surface-container-low transition-colors duration-150" data-subtab="points" onclick="window.CricApp.setDetailsTab('points')">
+                Points Table
+              </button>
+              <button class="details-nav-tab px-4 py-2 rounded-lg font-label-lg text-label-lg whitespace-nowrap text-on-surface-variant hover:bg-surface-container-low transition-colors duration-150" data-subtab="venue" onclick="window.CricApp.setDetailsTab('venue')">
+                Venue
+              </button>
+            </nav>
+
+            <!-- TAB 1: OVERVIEW PANEL -->
+            <div id="details-tab-overview" class="space-y-space-lg">
+              <!-- Bento Grid: Fixtures & Venue Highlights -->
+              <div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start">
+                
+                <!-- LEFT COLUMN: Featured Fixtures Card (Lg: 5 cols) -->
+                <section class="lg:col-span-5 space-y-space-md">
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                      <span class="material-symbols-outlined text-primary">scoreboard</span>
+                      <h3 class="font-headline-sm text-headline-sm text-primary font-bold">Match Fixtures</h3>
+                    </div>
+                    <span class="font-label-md text-label-md text-secondary font-bold">12 Matches Total</span>
+                  </div>
+
+                  <!-- Featured Match Fixture Card with Golden Left Accent -->
+                  <div class="bg-surface-container-lowest rounded-xl border border-surface-variant p-space-md shadow-sm relative overflow-hidden border-l-4 border-l-secondary-container">
+                    <!-- Fixture Header -->
+                    <div class="flex items-center justify-between pb-3 border-b border-surface-container">
+                      <div class="flex items-center gap-2">
+                        <span class="px-2 py-0.5 rounded bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm uppercase font-bold">Match 01</span>
+                        <span class="font-label-md text-label-md text-primary font-semibold">T20 Format</span>
+                      </div>
+                      <div class="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed-variant font-label-sm text-label-sm font-bold">
+                        <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                        <span>Upcoming</span>
+                      </div>
+                    </div>
+                    <!-- Teams Roster Display -->
+                    <div class="py-space-md space-y-space-sm">
+                      <!-- Team 1 (Apex Strikers - Click to View Roster) -->
+                      <div class="flex items-center justify-between cursor-pointer hover:bg-surface-container-low/60 p-1 rounded-lg transition-colors" onclick="window.CricApp.navigateTo('roster')">
+                        <div class="flex items-center gap-3">
+                          <div class="w-10 h-10 rounded-full bg-primary-container text-on-primary flex items-center justify-center font-headline-sm text-headline-sm shadow-sm font-bold">
+                            AS
+                          </div>
+                          <div>
+                            <h4 class="font-headline-sm text-headline-sm text-on-surface leading-tight font-bold hover:text-primary">Apex Strikers</h4>
+                            <p class="font-body-sm text-body-sm text-on-surface-variant">Seeded #1 • Group A (Tap for squad)</p>
+                          </div>
+                        </div>
+                        <span class="font-label-md text-label-md text-on-surface-variant font-semibold">TBA</span>
+                      </div>
+                      <!-- VS Separator Pill -->
+                      <div class="flex items-center justify-center -my-1">
+                        <span class="px-2.5 py-0.5 rounded-full bg-surface-container text-outline font-label-sm text-label-sm font-bold">VS</span>
+                      </div>
+                      <!-- Team 2 -->
+                      <div class="flex items-center justify-between p-1">
+                        <div class="flex items-center gap-3">
+                          <div class="w-10 h-10 rounded-full bg-tertiary-container text-on-primary flex items-center justify-center font-headline-sm text-headline-sm shadow-sm font-bold">
+                            RR
+                          </div>
+                          <div>
+                            <h4 class="font-headline-sm text-headline-sm text-on-surface leading-tight font-bold">Royal Rhinos</h4>
+                            <p class="font-body-sm text-body-sm text-on-surface-variant">Defending Finalists</p>
+                          </div>
+                        </div>
+                        <span class="font-label-md text-label-md text-on-surface-variant font-semibold">TBA</span>
+                      </div>
+                    </div>
+                    <!-- Match Logistics Strip -->
+                    <div class="pt-3 border-t border-surface-container bg-surface-container-low -mx-space-md -mb-space-md p-space-md rounded-b-xl flex items-center justify-between text-on-surface-variant">
+                      <div class="flex items-center gap-1.5">
+                        <span class="material-symbols-outlined text-[18px] text-primary">schedule</span>
+                        <span class="font-label-md text-label-md font-semibold text-on-surface">Oct 15, 10:00 AM</span>
+                      </div>
+                      <div class="flex items-center gap-1.5">
+                        <span class="material-symbols-outlined text-[18px] text-primary">sports_cricket</span>
+                        <span class="font-label-md text-label-md font-semibold text-primary">Pitch 1 (Center)</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Quick Mini Fixture List / Teaser -->
+                  <div class="bg-surface-container-lowest rounded-xl border border-surface-variant p-space-sm space-y-2">
+                    <div class="p-2.5 rounded-lg flex items-center justify-between hover:bg-surface-container-low transition-colors duration-150">
+                      <div class="flex items-center gap-2">
+                        <span class="font-label-sm text-label-sm text-outline font-bold">M02</span>
+                        <span class="font-body-md text-body-md font-semibold text-on-surface">Metro Lions vs Titan Eagles</span>
+                      </div>
+                      <span class="font-label-sm text-label-sm text-on-surface-variant">Oct 15 • 2:30 PM</span>
+                    </div>
+                    <div class="p-2.5 rounded-lg flex items-center justify-between hover:bg-surface-container-low transition-colors duration-150">
+                      <div class="flex items-center gap-2">
+                        <span class="font-label-sm text-label-sm text-outline font-bold">M03</span>
+                        <span class="font-body-md text-body-md font-semibold text-on-surface">Coastal Hurricanes vs Velocity CC</span>
+                      </div>
+                      <span class="font-label-sm text-label-sm text-on-surface-variant">Oct 16 • 10:00 AM</span>
+                    </div>
+                  </div>
+                </section>
+
+                <!-- RIGHT COLUMN: Ground & Venue Location Section (Lg: 7 cols) -->
+                <section class="lg:col-span-7 space-y-space-md">
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                      <span class="material-symbols-outlined text-primary">stadium</span>
+                      <h3 class="font-headline-sm text-headline-sm text-primary font-bold">Ground &amp; Venue Location</h3>
+                    </div>
+                    <span class="font-label-md text-label-md text-on-surface-variant font-semibold">Official Ground Host</span>
+                  </div>
+
+                  <!-- Venue Main Interactive Bento Box -->
+                  <div class="bg-surface-container-lowest rounded-xl border border-surface-variant shadow-sm overflow-hidden flex flex-col">
+                    <!-- Venue Visual Preview with Overlay Badges -->
+                    <div class="relative h-56 sm:h-64 w-full overflow-hidden bg-surface-container">
+                      <img alt="National Cricket Arena Grounds" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBfU7SrLP8segH6olDGC53cU_Ud8k6vPpygiyswZkqLasp9yDgEqDnBKW8F9_dbJQ3S42-6qBJoNKAEqnwQRrU9I0My4DR0M6QfqJP4OAwdyvGP4n1KvKSA4wteX6gv-AN2BrsY8L0st3Wo8_J_NXBvOlbe3QyySbF0qCbzWBmzd_njA-tLuuLw3qFagx1cOIt7k0EI1bKNzJcUjYCdofy6B6V_gVZZ6tch5Dxz3JmOowmlTqVbPT1_Mg" />
+                      <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+                      <!-- Ground Tag & Rating Floating Overlay -->
+                      <div class="absolute bottom-3 left-3 right-3 flex items-end justify-between">
+                        <div class="text-white">
+                          <span class="font-label-sm text-label-sm text-primary-fixed uppercase tracking-wider block font-bold">Premier Stadium</span>
+                          <h4 class="font-headline-md text-xl sm:text-2xl font-bold text-white leading-tight">
+                            National Cricket Arena
+                          </h4>
+                        </div>
+                        <div class="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-surface-container-lowest/95 text-on-surface shadow-md">
+                          <span class="material-symbols-outlined text-secondary-container text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+                          <span class="font-headline-sm text-headline-sm font-bold text-on-surface">4.8</span>
+                          <span class="font-body-sm text-body-sm text-outline">(128)</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Venue Address & Direct Action Link -->
+                    <div class="p-space-md border-b border-surface-container flex flex-col sm:flex-row sm:items-center justify-between gap-space-md">
+                      <div class="flex items-start gap-2.5">
+                        <span class="material-symbols-outlined text-primary shrink-0 mt-0.5" style="font-variation-settings: 'FILL' 1;">location_on</span>
+                        <div>
+                          <p class="font-body-md text-body-md font-semibold text-on-surface">
+                            Plot 42, Sports City Boulevard, Green Park Complex
+                          </p>
+                          <p class="font-body-sm text-body-sm text-on-surface-variant">
+                            Central District • 12 mins from Metro Line 3
+                          </p>
+                        </div>
+                      </div>
+                      <!-- Open In Maps CTA Button -->
+                      <a class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border-2 border-primary text-primary hover:bg-primary hover:text-on-primary transition-all duration-150 font-label-md text-label-md shrink-0 active:scale-95 font-bold" href="https://maps.google.com" rel="noopener noreferrer" target="_blank">
+                        <span class="material-symbols-outlined text-[18px]">map</span>
+                        <span>Open in Google Maps</span>
+                      </a>
+                    </div>
+
+                    <!-- Facilities Summary Badges Grid -->
+                    <div class="p-space-md bg-surface-bright space-y-space-sm">
+                      <span class="font-label-sm text-label-sm uppercase tracking-wider text-outline block font-bold">
+                        Stadium &amp; Match Facilities
+                      </span>
+                      <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+                        <div class="flex items-center gap-2 p-2.5 rounded-lg bg-surface-container-lowest border border-surface-variant shadow-sm">
+                          <span class="material-symbols-outlined text-primary text-[20px]">grass</span>
+                          <span class="font-label-sm text-label-sm text-on-surface font-semibold truncate">Natural Turf Pitch</span>
+                        </div>
+                        <div class="flex items-center gap-2 p-2.5 rounded-lg bg-surface-container-lowest border border-surface-variant shadow-sm">
+                          <span class="material-symbols-outlined text-primary text-[20px]">light_mode</span>
+                          <span class="font-label-sm text-label-sm text-on-surface font-semibold truncate">Floodlights (Day/Night)</span>
+                        </div>
+                        <div class="flex items-center gap-2 p-2.5 rounded-lg bg-surface-container-lowest border border-surface-variant shadow-sm">
+                          <span class="material-symbols-outlined text-primary text-[20px]">local_parking</span>
+                          <span class="font-label-sm text-label-sm text-on-surface font-semibold truncate">240+ Car Parking</span>
+                        </div>
+                        <div class="flex items-center gap-2 p-2.5 rounded-lg bg-surface-container-lowest border border-surface-variant shadow-sm">
+                          <span class="material-symbols-outlined text-primary text-[20px]">ac_unit</span>
+                          <span class="font-label-sm text-label-sm text-on-surface font-semibold truncate">AC Dressing Rooms</span>
+                        </div>
+                        <div class="flex items-center gap-2 p-2.5 rounded-lg bg-surface-container-lowest border border-surface-variant shadow-sm">
+                          <span class="material-symbols-outlined text-primary text-[20px]">tv</span>
+                          <span class="font-label-sm text-label-sm text-on-surface font-semibold truncate">Digital Scoreboard</span>
+                        </div>
+                        <div class="flex items-center gap-2 p-2.5 rounded-lg bg-surface-container-lowest border border-surface-variant shadow-sm">
+                          <span class="material-symbols-outlined text-primary text-[20px]">sports</span>
+                          <span class="font-label-sm text-label-sm text-on-surface font-semibold truncate">Umpire Box</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+              </div>
+            </div>
+
+            <!-- TAB 2: FIXTURES PANEL -->
+            <div id="details-tab-fixtures" class="space-y-space-md" style="display: none;">
+              <h3 class="font-headline-sm text-primary font-bold">Full Championship Match Schedule</h3>
+              <div class="space-y-3">
+                <div class="bg-surface-container-lowest p-4 rounded-xl border border-surface-variant shadow-sm">
+                  <div class="flex justify-between items-center mb-2">
+                    <span class="text-xs font-bold text-primary px-2 py-0.5 bg-surface-container rounded">Round 1</span>
+                    <span class="text-xs text-error font-bold flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-error animate-ping"></span> LIVE NOW</span>
+                  </div>
+                  <div class="flex justify-between items-center text-sm font-bold">
+                    <span class="text-primary hover:underline cursor-pointer" onclick="window.CricApp.navigateTo('roster')">Apex Strikers (184/4)</span>
+                    <span class="text-outline">vs</span>
+                    <span>Royal Rhinos</span>
+                  </div>
+                  <p class="text-xs text-on-surface-variant mt-2 flex items-center justify-between">
+                    <span>Oct 15, 10:00 AM • Center Pitch</span>
+                    <button class="text-xs text-secondary font-bold" onclick="window.CricApp.navigateTo('matches')">Live Scorecard →</button>
+                  </p>
+                </div>
+
+                <div class="bg-surface-container-lowest p-4 rounded-xl border border-surface-variant shadow-sm">
+                  <div class="flex justify-between items-center mb-2">
+                    <span class="text-xs font-bold text-outline px-2 py-0.5 bg-surface-container rounded">Round 1</span>
+                    <span class="text-xs text-outline">Upcoming</span>
+                  </div>
+                  <div class="flex justify-between items-center text-sm font-bold">
+                    <span>Metro Lions</span>
+                    <span class="text-outline">vs</span>
+                    <span>Titan Eagles</span>
+                  </div>
+                  <p class="text-xs text-on-surface-variant mt-2">Oct 15, 2:30 PM • Pitch 2 (East Turf)</p>
+                </div>
+
+                <div class="bg-surface-container-lowest p-4 rounded-xl border border-surface-variant shadow-sm">
+                  <div class="flex justify-between items-center mb-2">
+                    <span class="text-xs font-bold text-outline px-2 py-0.5 bg-surface-container rounded">Round 2</span>
+                    <span class="text-xs text-outline">Upcoming</span>
+                  </div>
+                  <div class="flex justify-between items-center text-sm font-bold">
+                    <span>Coastal Hurricanes</span>
+                    <span class="text-outline">vs</span>
+                    <span>Velocity CC</span>
+                  </div>
+                  <p class="text-xs text-on-surface-variant mt-2">Oct 16, 10:00 AM • Center Pitch</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- TAB 3: TEAMS PANEL -->
+            <div id="details-tab-teams" class="space-y-space-md" style="display: none;">
+              <h3 class="font-headline-sm text-primary font-bold">Registered Participating Teams (6/16)</h3>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div class="p-3 bg-surface-container-lowest rounded-xl border border-primary-container/40 flex items-center justify-between cursor-pointer hover:bg-surface-container-low" onclick="window.CricApp.navigateTo('roster')">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-primary-container text-white flex items-center justify-center font-bold">AS</div>
+                    <div>
+                      <h4 class="font-bold text-sm">Apex Strikers</h4>
+                      <p class="text-xs text-on-surface-variant">Capt: Rohit Sharma • 15 Players</p>
+                    </div>
+                  </div>
+                  <span class="text-xs bg-primary-fixed text-on-primary-fixed px-2 py-0.5 rounded font-bold">Roster</span>
+                </div>
+                <div class="p-3 bg-surface-container-lowest rounded-xl border border-surface-variant flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-tertiary-container text-white flex items-center justify-center font-bold">RR</div>
+                    <div>
+                      <h4 class="font-bold text-sm">Royal Rhinos</h4>
+                      <p class="text-xs text-on-surface-variant">Capt: David Miller • 14 Players</p>
+                    </div>
+                  </div>
+                  <span class="text-xs text-outline">Seeded #2</span>
+                </div>
+                <div class="p-3 bg-surface-container-lowest rounded-xl border border-surface-variant flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-[#855300] text-white flex items-center justify-center font-bold">ML</div>
+                    <div>
+                      <h4 class="font-bold text-sm">Metro Lions</h4>
+                      <p class="text-xs text-on-surface-variant">Capt: Chris Woakes • 13 Players</p>
+                    </div>
+                  </div>
+                  <span class="text-xs text-outline">Group B</span>
+                </div>
+                <div class="p-3 bg-surface-container-lowest rounded-xl border border-surface-variant flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-[#0c4327] text-white flex items-center justify-center font-bold">TE</div>
+                    <div>
+                      <h4 class="font-bold text-sm">Titan Eagles</h4>
+                      <p class="text-xs text-on-surface-variant">Capt: Shai Hope • 14 Players</p>
+                    </div>
+                  </div>
+                  <span class="text-xs text-outline">Group B</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- TAB 4: POINTS TABLE PANEL -->
+            <div id="details-tab-points" class="space-y-space-md" style="display: none;">
+              <h3 class="font-headline-sm text-primary font-bold">Tournament Standings &amp; Net Run Rate</h3>
+              <div class="overflow-x-auto rounded-xl border border-surface-variant bg-surface-container-lowest">
+                <table class="w-full text-left text-xs">
+                  <thead class="bg-surface-container text-on-surface-variant uppercase text-[10px] font-bold">
+                    <tr>
+                      <th class="p-3"># Team</th>
+                      <th class="p-3 text-center">P</th>
+                      <th class="p-3 text-center">W</th>
+                      <th class="p-3 text-center">L</th>
+                      <th class="p-3 text-right">NRR</th>
+                      <th class="p-3 text-right font-extrabold text-primary">Pts</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-surface-container">
+                    <tr class="bg-primary-fixed/20 font-bold">
+                      <td class="p-3 text-primary flex items-center gap-2">
+                        <span>1</span>
+                        <span>Apex Strikers</span>
+                      </td>
+                      <td class="p-3 text-center">4</td>
+                      <td class="p-3 text-center text-primary">4</td>
+                      <td class="p-3 text-center">0</td>
+                      <td class="p-3 text-right text-primary">+1.842</td>
+                      <td class="p-3 text-right font-bold text-primary">8</td>
+                    </tr>
+                    <tr>
+                      <td class="p-3 font-semibold">2 Royal Rhinos</td>
+                      <td class="p-3 text-center">4</td>
+                      <td class="p-3 text-center">3</td>
+                      <td class="p-3 text-center">1</td>
+                      <td class="p-3 text-right">+0.925</td>
+                      <td class="p-3 text-right font-bold">6</td>
+                    </tr>
+                    <tr>
+                      <td class="p-3 font-semibold">3 Metro Lions</td>
+                      <td class="p-3 text-center">4</td>
+                      <td class="p-3 text-center">2</td>
+                      <td class="p-3 text-center">2</td>
+                      <td class="p-3 text-right">+0.118</td>
+                      <td class="p-3 text-right font-bold">4</td>
+                    </tr>
+                    <tr>
+                      <td class="p-3 font-semibold">4 Titan Eagles</td>
+                      <td class="p-3 text-center">4</td>
+                      <td class="p-3 text-center">2</td>
+                      <td class="p-3 text-center">2</td>
+                      <td class="p-3 text-right">-0.240</td>
+                      <td class="p-3 text-right font-bold">4</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- TAB 5: VENUE PANEL -->
+            <div id="details-tab-venue" class="space-y-space-md" style="display: none;">
+              <h3 class="font-headline-sm text-primary font-bold">Pitch Condition &amp; Technical Report</h3>
+              <div class="bg-surface-container-lowest p-4 rounded-xl border border-surface-variant space-y-3">
+                <div class="grid grid-cols-2 gap-3 text-xs">
+                  <div class="p-3 bg-surface-container-low rounded-lg">
+                    <span class="text-outline uppercase block font-bold">Turf Condition</span>
+                    <span class="font-bold text-sm text-on-surface">Hard Grass, Low Moisture</span>
+                  </div>
+                  <div class="p-3 bg-surface-container-low rounded-lg">
+                    <span class="text-outline uppercase block font-bold">Avg 1st Innings</span>
+                    <span class="font-bold text-sm text-primary">174 Runs</span>
+                  </div>
+                  <div class="p-3 bg-surface-container-low rounded-lg">
+                    <span class="text-outline uppercase block font-bold">Boundary (Straight)</span>
+                    <span class="font-bold text-sm text-on-surface">74 meters</span>
+                  </div>
+                  <div class="p-3 bg-surface-container-low rounded-lg">
+                    <span class="text-outline uppercase block font-bold">Boundary (Square)</span>
+                    <span class="font-bold text-sm text-on-surface">68 meters</span>
+                  </div>
+                </div>
+                <p class="text-xs text-on-surface-variant leading-relaxed">
+                  Pitch 1 at National Cricket Arena offers good initial carry for pace bowlers in the first 6 overs, transitioning into high-scoring batting conditions with even true bounce under floodlights.
+                </p>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Sticky Bottom CTA Bar -->
+          <aside class="sticky bottom-0 left-0 w-full z-30 bg-surface shadow-lg border-t border-surface-variant py-3 px-margin mt-8">
+            <div class="max-w-5xl mx-auto flex items-center justify-between gap-space-md">
+              <div class="flex flex-col">
+                <span class="font-label-sm text-label-sm uppercase tracking-wider text-outline font-semibold">Entry Fee</span>
+                <div class="flex items-baseline gap-1">
+                  <span id="details-entry-fee" class="font-headline-lg text-2xl font-extrabold text-primary">$250</span>
+                  <span class="font-body-sm text-body-sm text-on-surface-variant">/ team</span>
+                </div>
+              </div>
+              <div class="flex items-center gap-3">
+                <button class="h-12 px-6 rounded-lg bg-primary-container hover:bg-primary text-on-primary font-label-lg text-label-lg flex items-center gap-2 shadow-md transition-all duration-150 active:scale-95 font-bold" type="button" onclick="window.CricApp.navigateTo('register', { tournamentId: 'premier-2025' })">
+                  <span>Register Your Team</span>
+                  <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+                </button>
+              </div>
+            </div>
+          </aside>
+        </section>
+
+        <!-- ========================================================================= -->
+        <!-- SCREEN 3: TEAM REGISTRATION FORM                                          -->
+        <!-- ========================================================================= -->
+        <section id="screen-register" class="screen-view pb-24">
+          <!-- Top App Bar -->
+          <header class="sticky top-0 z-40 bg-surface shadow-sm">
+            <div class="max-w-2xl mx-auto flex items-center justify-between px-margin h-14">
+              <div class="flex items-center gap-space-sm">
+                <button aria-label="Go Back" class="p-2 -ml-2 rounded-full hover:bg-surface-container-low transition-colors duration-150 active:scale-95 text-primary" type="button" onclick="window.CricApp.goBack()">
+                  <span class="material-symbols-outlined">arrow_back</span>
+                </button>
+                <div>
+                  <h1 class="font-headline-sm text-headline-sm text-primary tracking-tight font-bold">Register Your Team</h1>
+                  <p class="font-label-sm text-label-sm text-on-surface-variant">Step 1 of 2: Team &amp; Captain Details</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-1.5 bg-primary-fixed text-on-primary-fixed px-2.5 py-1 rounded-full font-bold">
+                <span class="w-2 h-2 rounded-full bg-primary-container"></span>
+                <span class="font-label-sm text-label-sm">LIVE ENTRY</span>
+              </div>
+            </div>
+            <!-- Step Progress Bar Indicator -->
+            <div class="w-full bg-surface-container-high h-1">
+              <div class="bg-primary h-1 w-1/2 transition-all duration-300"></div>
+            </div>
+          </header>
+
+          <!-- Main Content Canvas -->
+          <main class="max-w-2xl mx-auto px-margin pt-space-md pb-12">
+            <!-- Selected Tournament Card Preview -->
+            <div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/50 p-space-md shadow-sm mb-space-md relative overflow-hidden">
+              <div class="absolute left-0 top-0 bottom-0 w-1.5 bg-secondary-container"></div>
+              <div class="flex items-start justify-between">
+                <div class="space-y-1 pl-1">
+                  <div class="flex items-center gap-1.5">
+                    <span class="material-symbols-outlined text-secondary text-sm" style="font-variation-settings: 'FILL' 1;">emoji_events</span>
+                    <span class="font-label-sm text-label-sm text-secondary uppercase font-bold">Tournament Selection</span>
+                  </div>
+                  <h2 id="reg-preview-title" class="font-headline-md text-headline-md text-on-surface font-bold">Premier Championship 2025</h2>
+                  <div class="flex items-center gap-3 pt-1 text-on-surface-variant font-body-sm text-body-sm">
+                    <span class="inline-flex items-center gap-1">
+                      <span class="material-symbols-outlined text-[16px] text-primary">payments</span>
+                      <span>Entry Fee: <strong id="reg-preview-fee" class="text-on-surface font-headline-sm text-[14px] font-bold">$250</strong></span>
+                    </span>
+                    <span>•</span>
+                    <span class="inline-flex items-center gap-1">
+                      <span class="material-symbols-outlined text-[16px] text-error">calendar_clock</span>
+                      <span>Deadline: <span id="reg-preview-deadline" class="font-semibold text-on-surface">Oct 10</span></span>
+                    </span>
+                  </div>
+                </div>
+                <span class="bg-surface-container-low text-primary p-2 rounded-xl">
+                  <span class="material-symbols-outlined">verified</span>
+                </span>
+              </div>
+            </div>
+
+            <!-- Form Container Card -->
+            <form id="team-registration-form" class="bg-surface-container-lowest rounded-2xl border border-outline-variant/40 shadow-sm p-space-md md:p-space-lg space-y-space-lg">
+              
+              <!-- Section 1: Team Details -->
+              <section class="space-y-space-md">
+                <div class="border-b border-surface-variant pb-2">
+                  <h3 class="font-headline-sm text-headline-sm text-primary flex items-center gap-2 font-bold">
+                    <span class="material-symbols-outlined text-primary-container">shield</span>
+                    Team Profile
+                  </h3>
+                  <p class="font-body-sm text-body-sm text-on-surface-variant">Provide the official title and squad category for schedule listings.</p>
+                </div>
+                
+                <!-- Team Name Field -->
+                <div class="space-y-1">
+                  <label class="block font-label-md text-label-md text-on-surface font-bold" for="team-name">
+                    Team Name <span class="text-error">*</span>
+                  </label>
+                  <div class="relative flex items-center">
+                    <span class="material-symbols-outlined absolute left-3 text-outline pointer-events-none">shield</span>
+                    <input class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg pl-10 pr-3 py-2.5 font-body-md text-body-md text-on-surface placeholder:text-outline focus:border-primary focus:ring-1 focus:ring-primary transition-colors" id="team-name" name="team_name" placeholder="e.g. Apex Strikers Cricket Club" value="Apex Strikers Cricket Club" required="" type="text" />
+                  </div>
+                </div>
+
+                <!-- Format & Category Dropdown -->
+                <div class="space-y-1">
+                  <label class="block font-label-md text-label-md text-on-surface font-bold" for="format-category">
+                    Select Playing Format / Category <span class="text-error">*</span>
+                  </label>
+                  <div class="relative flex items-center">
+                    <span class="material-symbols-outlined absolute left-3 text-outline pointer-events-none">sports_cricket</span>
+                    <select class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg pl-10 pr-10 py-2.5 font-body-md text-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary appearance-none cursor-pointer" id="format-category" name="format_category" required="">
+                      <option value="t20_open" selected>T20 Open Men's</option>
+                      <option value="corporate_tier_1">Corporate Tier 1</option>
+                      <option value="masters_over_35">Masters (Over 35s)</option>
+                      <option value="super_sixes">Super Sixes Weekend Trophy</option>
+                    </select>
+                    <span class="material-symbols-outlined absolute right-3 text-outline pointer-events-none">expand_more</span>
+                  </div>
+                </div>
+
+                <!-- Squad Size Selector (11 to 16 players) -->
+                <div class="space-y-2 bg-surface-container-low p-space-md rounded-xl border border-outline-variant/40">
+                  <div class="flex items-center justify-between">
+                    <div>
+                      <span class="font-label-md text-label-md text-on-surface block font-bold">Squad Size</span>
+                      <span class="font-body-sm text-body-sm text-on-surface-variant">Includes playing XI plus designated bench reserves (11 to 16)</span>
+                    </div>
+                    <div class="flex items-center gap-3 bg-surface-container-lowest border border-outline-variant rounded-lg px-2 py-1 shadow-sm">
+                      <button aria-label="Decrease squad size" class="w-8 h-8 rounded flex items-center justify-center text-primary hover:bg-surface-container transition-colors disabled:opacity-40" id="btn-decrement" type="button">
+                        <span class="material-symbols-outlined">remove</span>
+                      </button>
+                      <span class="font-headline-sm text-headline-sm text-primary w-6 text-center select-none font-bold" id="squad-count">14</span>
+                      <button aria-label="Increase squad size" class="w-8 h-8 rounded flex items-center justify-center text-primary hover:bg-surface-container transition-colors disabled:opacity-40" id="btn-increment" type="button">
+                        <span class="material-symbols-outlined">add</span>
+                      </button>
+                    </div>
+                  </div>
+                  <input class="w-full accent-primary-container h-1.5 bg-surface-container-high rounded-lg cursor-pointer" id="squad-slider" max="16" min="11" type="range" value="14" />
+                  <div class="flex justify-between text-on-surface-variant font-label-sm text-label-sm px-1">
+                    <span>Min: 11</span>
+                    <span>Recommended: 14</span>
+                    <span>Max: 16</span>
+                  </div>
+                </div>
+              </section>
+
+              <!-- Section 2: Captain Details -->
+              <section class="space-y-space-md">
+                <div class="border-b border-surface-variant pb-2">
+                  <h3 class="font-headline-sm text-headline-sm text-primary flex items-center gap-2 font-bold">
+                    <span class="material-symbols-outlined text-primary-container">person</span>
+                    Captain &amp; Point of Contact
+                  </h3>
+                  <p class="font-body-sm text-body-sm text-on-surface-variant">The match commissioner and umpires will route match fixtures to this coordinator.</p>
+                </div>
+                
+                <!-- Captain Name Field -->
+                <div class="space-y-1">
+                  <label class="block font-label-md text-label-md text-on-surface font-bold" for="captain-name">
+                    Captain Name <span class="text-error">*</span>
+                  </label>
+                  <div class="relative flex items-center">
+                    <span class="material-symbols-outlined absolute left-3 text-outline pointer-events-none">person</span>
+                    <input class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg pl-10 pr-3 py-2.5 font-body-md text-body-md text-on-surface placeholder:text-outline focus:border-primary focus:ring-1 focus:ring-primary transition-colors" id="captain-name" name="captain_name" placeholder="Full legal name" value="Rohit Sharma" required="" type="text" />
+                  </div>
+                </div>
+
+                <!-- Captain Phone with Country Code Selector -->
+                <div class="space-y-1">
+                  <label class="block font-label-md text-label-md text-on-surface font-bold" for="captain-phone">
+                    Captain Contact Number <span class="text-error">*</span>
+                  </label>
+                  <div class="flex gap-2">
+                    <div class="relative w-28 shrink-0">
+                      <select aria-label="Country Code" class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg pl-2 pr-7 py-2.5 font-body-md text-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary appearance-none cursor-pointer" id="country-code">
+                        <option value="+1">+1 (US)</option>
+                        <option value="+44">+44 (UK)</option>
+                        <option value="+91" selected>+91 (IN)</option>
+                        <option value="+61">+61 (AU)</option>
+                        <option value="+971">+971 (AE)</option>
+                      </select>
+                      <span class="material-symbols-outlined absolute right-2 top-3 text-outline pointer-events-none text-base">expand_more</span>
+                    </div>
+                    <div class="relative flex-1 flex items-center">
+                      <span class="material-symbols-outlined absolute left-3 text-outline pointer-events-none">call</span>
+                      <input class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg pl-10 pr-3 py-2.5 font-body-md text-body-md text-on-surface placeholder:text-outline focus:border-primary focus:ring-1 focus:ring-primary transition-colors" id="captain-phone" name="captain_phone" placeholder="98765 43210" value="98765 43210" required="" type="tel" />
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Captain Email Address -->
+                <div class="space-y-1">
+                  <label class="block font-label-md text-label-md text-on-surface font-bold" for="captain-email">
+                    Captain Email Address <span class="text-error">*</span>
+                  </label>
+                  <div class="relative flex items-center">
+                    <span class="material-symbols-outlined absolute left-3 text-outline pointer-events-none">mail</span>
+                    <input class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg pl-10 pr-3 py-2.5 font-body-md text-body-md text-on-surface placeholder:text-outline focus:border-primary focus:ring-1 focus:ring-primary transition-colors" id="captain-email" name="captain_email" placeholder="captain@cricketclub.org" value="captain.rohit@apexstrikers.org" required="" type="email" />
+                  </div>
+                </div>
+              </section>
+
+              <!-- Section 3: Payment / Entry Fee Options -->
+              <section class="space-y-space-md pt-2">
+                <div class="border-b border-surface-variant pb-2">
+                  <h3 class="font-headline-sm text-headline-sm text-primary flex items-center gap-2 font-bold">
+                    <span class="material-symbols-outlined text-primary-container">receipt_long</span>
+                    Payment &amp; Entry Fee Preference
+                  </h3>
+                  <p class="font-body-sm text-body-sm text-on-surface-variant">Lock in registration slot securely. Receipts generated automatically upon submission.</p>
+                </div>
+                
+                <!-- Payment Toggle Radio Cards -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <!-- Option 1: Pay Now -->
+                  <label class="relative flex flex-col p-3.5 bg-surface-container-low border-2 border-primary-container rounded-xl cursor-pointer hover:bg-surface-bright transition-all">
+                    <input checked="" class="sr-only peer" name="payment_mode" type="radio" value="online" />
+                    <div class="flex items-center justify-between mb-1.5">
+                      <span class="inline-flex items-center gap-1.5 font-label-md text-label-md text-primary font-bold">
+                        <span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">credit_card</span>
+                        Pay Now
+                      </span>
+                      <span class="radio-dot-indicator w-4 h-4 rounded-full border-2 border-primary bg-primary flex items-center justify-center">
+                        <span class="w-1.5 h-1.5 bg-white rounded-full"></span>
+                      </span>
+                    </div>
+                    <span id="pay-now-amount" class="font-headline-sm text-headline-sm text-on-surface font-bold">$250.00</span>
+                    <span class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Instant Stripe / UPI clearance</span>
+                  </label>
+
+                  <!-- Option 2: Pay on Ground -->
+                  <label class="relative flex flex-col p-3.5 bg-surface-container-lowest border border-outline-variant rounded-xl cursor-pointer hover:bg-surface-container-low transition-all">
+                    <input class="sr-only peer" name="payment_mode" type="radio" value="on_ground" />
+                    <div class="flex items-center justify-between mb-1.5">
+                      <span class="inline-flex items-center gap-1.5 font-label-md text-label-md text-on-surface font-bold">
+                        <span class="material-symbols-outlined text-outline">storefront</span>
+                        Pay on Ground
+                      </span>
+                      <span class="radio-dot-indicator w-4 h-4 rounded-full border-2 border-outline flex items-center justify-center"></span>
+                    </div>
+                    <span id="pay-ground-amount" class="font-headline-sm text-headline-sm text-on-surface font-bold">$250.00</span>
+                    <span class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Settle with officials at Check-in</span>
+                  </label>
+                </div>
+
+                <!-- Promo / Discount Code Box -->
+                <div class="space-y-1 pt-1">
+                  <label class="block font-label-md text-label-md text-on-surface font-bold" for="discount-code">
+                    Club Discount or Affiliate Code (Try: PROMO2025)
+                  </label>
+                  <div class="flex gap-2">
+                    <div class="relative flex-1 flex items-center">
+                      <span class="material-symbols-outlined absolute left-3 text-outline pointer-events-none">sell</span>
+                      <input class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg pl-10 pr-3 py-2 font-body-md text-body-md uppercase tracking-wider text-on-surface placeholder:normal-case placeholder:tracking-normal focus:border-primary focus:ring-1 focus:ring-primary" id="discount-code" placeholder="PROMO2025" type="text" />
+                    </div>
+                    <button id="btn-apply-promo" class="px-4 py-2 border border-primary text-primary hover:bg-primary-container hover:text-on-primary font-label-md text-label-md rounded-lg transition-colors active:scale-95 font-bold" type="button">
+                      Apply
+                    </button>
+                  </div>
+                </div>
+              </section>
+
+              <!-- Section 4: Terms & Rules Compliance Checkbox -->
+              <section class="pt-2">
+                <label class="flex items-start gap-3 cursor-pointer group select-none">
+                  <input checked="" class="mt-1 w-4 h-4 text-primary bg-surface-container-lowest border-outline-variant rounded focus:ring-primary focus:ring-2 cursor-pointer" id="terms-checkbox" required="" type="checkbox" />
+                  <span class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+                    I confirm all squad players comply with tournament eligibility criteria, code of athletic conduct, and official pitch regulations.
+                  </span>
+                </label>
+              </section>
+
+              <!-- Bottom Action Section: Validation Button -->
+              <div class="pt-2">
+                <button class="w-full h-12 bg-primary-container text-on-primary font-label-lg text-label-lg rounded-lg shadow-md hover:bg-primary transition-all duration-150 flex items-center justify-center gap-2 active:scale-95 group font-bold" id="submit-registration-btn" type="submit">
+                  <span>Submit &amp; Proceed to Payment</span>
+                  <span class="material-symbols-outlined group-hover:translate-x-0.5 transition-transform text-xl">arrow_forward</span>
+                </button>
+                <p class="text-center font-label-sm text-label-sm text-outline mt-2 flex items-center justify-center gap-1">
+                  <span class="material-symbols-outlined text-[14px]">lock</span>
+                  <span>256-bit SSL encrypted match entry channel</span>
+                </p>
+              </div>
+            </form>
+          </main>
+        </section>
+
+        <!-- ========================================================================= -->
+        <!-- SCREEN 4: PLAYERS ROSTER & PLAYER STATS                                   -->
+        <!-- ========================================================================= -->
+        <section id="screen-roster" class="screen-view pb-32">
+          <!-- Top App Bar -->
+          <header class="bg-surface border-b border-surface-variant shadow-sm flex justify-between items-center w-full px-margin h-14 sticky top-0 z-40 transition-colors duration-150">
+            <div class="flex items-center gap-space-sm">
+              <button aria-label="Go back" class="p-2 rounded-lg text-primary hover:bg-surface-container-low active:scale-95 transition-transform duration-100 flex items-center justify-center" type="button" onclick="window.CricApp.goBack()">
+                <span class="material-symbols-outlined">arrow_back</span>
+              </button>
+              <div class="flex items-center gap-1.5 cursor-pointer" onclick="window.CricApp.navigateTo('hub')">
+                <span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1;">sports_cricket</span>
+                <span class="font-headline-sm text-headline-sm text-primary tracking-tight font-bold">CricMatch Pro</span>
+              </div>
+            </div>
+            <!-- Right Actions -->
+            <div class="flex items-center gap-space-xs">
+              <button aria-label="Share Squad" class="p-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low active:scale-95 transition-transform duration-100 flex items-center justify-center" type="button" onclick="window.CricApp.showToast('Squad link copied to clipboard', 'share')">
+                <span class="material-symbols-outlined">share</span>
+              </button>
+              <button aria-label="Notifications" class="p-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low active:scale-95 transition-transform duration-100 relative flex items-center justify-center" type="button" onclick="window.CricApp.openNotificationsModal()">
+                <span class="material-symbols-outlined">notifications</span>
+                <span class="absolute top-2 right-2 w-2 h-2 rounded-full bg-secondary-container ring-2 ring-surface"></span>
+              </button>
+            </div>
+          </header>
+
+          <!-- Main Scrollable Content Canvas -->
+          <main class="flex-1 w-full max-w-5xl mx-auto px-margin md:px-margin-tablet pt-space-md">
+            
+            <!-- Subheader / Team Identity Row -->
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-space-md pb-space-md border-b border-outline-variant/40 mb-space-md">
+              <div class="flex items-center gap-space-md">
+                <!-- Team Jersey Crest Emblem -->
+                <div class="relative w-14 h-14 rounded-xl bg-gradient-to-tr from-primary to-primary-container p-0.5 shadow-md flex items-center justify-center text-on-primary shrink-0">
+                  <div class="w-full h-full bg-surface-container-lowest rounded-[10px] flex items-center justify-center relative overflow-hidden">
+                    <div class="absolute inset-x-0 top-0 h-4 bg-primary flex items-center justify-center">
+                      <span class="text-[8px] font-headline-sm tracking-widest text-on-primary font-bold">AS</span>
+                    </div>
+                    <span class="material-symbols-outlined text-primary text-2xl mt-2">shield</span>
+                    <!-- Gold Star Championship Badge -->
+                    <div class="absolute bottom-1 right-1 bg-secondary-container text-on-secondary-fixed rounded-full w-4 h-4 flex items-center justify-center text-[10px] font-bold">
+                      ★
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <div class="flex items-center gap-2">
+                    <h1 class="font-headline-lg-mobile md:font-headline-lg text-xl md:text-2xl font-extrabold text-on-surface tracking-tight">
+                      Apex Strikers
+                    </h1>
+                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-label-sm font-label-sm bg-primary-fixed text-on-primary-fixed border border-primary-fixed-dim/60 font-bold">
+                      DIVISION A
+                    </span>
+                  </div>
+                  <p class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1.5 mt-0.5">
+                    <span id="squad-counter-text">Squad Roster (15 Players)</span>
+                    <span class="inline-block w-1 h-1 rounded-full bg-outline"></span>
+                    <span class="text-primary font-semibold">T20 Champions Cup</span>
+                  </p>
+                </div>
+              </div>
+
+              <!-- Quick Action: Export / Rules -->
+              <div class="flex items-center gap-2">
+                <button class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-primary text-primary hover:bg-surface-container-low transition-colors duration-150 font-label-md text-label-md font-bold" type="button" onclick="window.CricApp.exportRoster()">
+                  <span class="material-symbols-outlined text-base">file_download</span>
+                  <span>Export Roster</span>
+                </button>
+                <button class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-container-high hover:bg-surface-container-highest text-on-surface transition-colors duration-150 font-label-md text-label-md font-bold" type="button" onclick="window.CricApp.showToast('Squad eligibility: Verified for upcoming toss', 'tune')">
+                  <span class="material-symbols-outlined text-base">tune</span>
+                  <span>Settings</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Search & Filter Row -->
+            <div class="space-y-space-sm mb-space-lg">
+              <div class="flex flex-col sm:flex-row gap-space-sm">
+                <!-- Player Search Input -->
+                <div class="relative flex-1">
+                  <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-xl">search</span>
+                  <input id="player-search-input" class="w-full pl-10 pr-4 py-2.5 bg-surface-container-lowest border border-outline-variant rounded-lg text-body-md font-body-md text-on-surface placeholder:text-outline focus:outline-none focus:border-2 focus:border-primary transition-all duration-150 shadow-sm" placeholder="Search by player name, jersey # or role..." type="text" />
+                </div>
+                <!-- Role Select Dropdown -->
+                <div class="relative sm:w-52">
+                  <select id="roster-sort-select" class="w-full appearance-none pl-3 pr-9 py-2.5 bg-surface-container-lowest border border-outline-variant rounded-lg text-body-md font-body-md text-on-surface focus:outline-none focus:border-2 focus:border-primary transition-all duration-150 shadow-sm cursor-pointer">
+                    <option value="performance">Sort: Performance (High-Low)</option>
+                    <option value="name">Sort: Player Name (A-Z)</option>
+                    <option value="runs">Sort: Most Runs</option>
+                    <option value="wickets">Sort: Most Wickets</option>
+                    <option value="strike-rate">Sort: Strike Rate</option>
+                  </select>
+                  <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none text-xl">unfold_more</span>
+                </div>
+              </div>
+
+              <!-- Role Filter Chips Horizontal Carousel -->
+              <div class="flex items-center gap-2 overflow-x-auto custom-scroll py-1 -mx-margin px-margin sm:mx-0 sm:px-0">
+                <span class="text-label-sm font-label-sm text-on-surface-variant uppercase tracking-wider shrink-0 mr-1 flex items-center gap-1 font-bold">
+                  <span class="material-symbols-outlined text-sm">filter_alt</span> Role:
+                </span>
+                <button class="roster-role-chip shrink-0 px-3.5 py-1.5 rounded-full bg-primary-container text-on-primary font-label-md text-label-md shadow-sm active:scale-95 transition-transform flex items-center gap-1" data-role="all" type="button">
+                  <span>All</span>
+                  <span class="bg-on-primary/20 text-on-primary text-[10px] px-1.5 py-0.2 rounded-full font-bold">15</span>
+                </button>
+                <button class="roster-role-chip shrink-0 px-3.5 py-1.5 rounded-full bg-surface-container-lowest border border-outline-variant text-on-surface-variant hover:bg-surface-container-low font-label-md text-label-md active:scale-95 transition-transform flex items-center gap-1.5" data-role="batsman" type="button">
+                  <span class="w-2 h-2 rounded-full bg-[#EA580C]"></span>
+                  <span>Batsman</span>
+                  <span class="text-outline text-xs">5</span>
+                </button>
+                <button class="roster-role-chip shrink-0 px-3.5 py-1.5 rounded-full bg-surface-container-lowest border border-outline-variant text-on-surface-variant hover:bg-surface-container-low font-label-md text-label-md active:scale-95 transition-transform flex items-center gap-1.5" data-role="bowler" type="button">
+                  <span class="w-2 h-2 rounded-full bg-[#4F46E5]"></span>
+                  <span>Bowler</span>
+                  <span class="text-outline text-xs">4</span>
+                </button>
+                <button class="roster-role-chip shrink-0 px-3.5 py-1.5 rounded-full bg-surface-container-lowest border border-outline-variant text-on-surface-variant hover:bg-surface-container-low font-label-md text-label-md active:scale-95 transition-transform flex items-center gap-1.5" data-role="all-rounder" type="button">
+                  <span class="w-2 h-2 rounded-full bg-primary-container"></span>
+                  <span>All-Rounder</span>
+                  <span class="text-outline text-xs">4</span>
+                </button>
+                <button class="roster-role-chip shrink-0 px-3.5 py-1.5 rounded-full bg-surface-container-lowest border border-outline-variant text-on-surface-variant hover:bg-surface-container-low font-label-md text-label-md active:scale-95 transition-transform flex items-center gap-1.5" data-role="wicket-keeper" type="button">
+                  <span class="w-2 h-2 rounded-full bg-secondary-container"></span>
+                  <span>Wicket-Keeper</span>
+                  <span class="text-outline text-xs">2</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- CAPTAIN HIGHLIGHT HERO BANNER CARD -->
+            <div class="relative overflow-hidden bg-gradient-to-br from-tertiary via-primary-container to-primary rounded-xl p-space-md md:p-space-lg text-on-primary shadow-lg border border-primary-fixed/20 mb-space-lg cursor-pointer" onclick="window.CricApp.openPlayerModal('captain')">
+              <div class="absolute -right-12 -top-12 w-56 h-56 rounded-full bg-secondary-container/10 blur-2xl pointer-events-none"></div>
+              <div class="absolute right-0 bottom-0 translate-x-8 translate-y-8 opacity-10 pointer-events-none">
+                <span class="material-symbols-outlined text-[160px] leading-none">sports_cricket</span>
+              </div>
+              <div class="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-space-md">
+                <!-- Captain Info & Avatar -->
+                <div class="flex items-center gap-space-md">
+                  <div class="relative shrink-0">
+                    <div class="w-20 h-20 md:w-24 md:h-24 rounded-full ring-4 ring-secondary-container/90 overflow-hidden shadow-md bg-surface-container-highest">
+                      <img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDsrj1YrA55wHPLpHaN7NIdncKmapjJ81AsT4-fUrKMqG5nsY27gbA9upBYv51UDy-sTP9-yzYPWehIZHP70_TN8nx2yaHlRxYnyYQhFxxx0I47tHBOe9U3t7EBMGOy78ZnUj0yH-rK9O3wpH2SV4NLVyVdTUOJ4Q6V5mK5vzSiqQay-U8IrVgLwMGqqWHzzZhxtxLYwcmpFSGg4Hjjklxs-s6lvyxBqT5v6dGLy1wxyaLyu6HUBD-rYQ" alt="Rohit Sharma" />
+                    </div>
+                    <div class="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-secondary-container text-on-secondary-fixed border-2 border-surface-container-lowest font-headline-sm text-headline-sm flex items-center justify-center font-bold shadow">
+                      C
+                    </div>
+                  </div>
+                  <div>
+                    <div class="flex items-center gap-2 flex-wrap">
+                      <span class="bg-secondary-container/90 text-on-secondary-fixed text-label-sm font-label-sm px-2.5 py-0.5 rounded-full uppercase tracking-wider font-bold shadow-sm">
+                        Team Captain
+                      </span>
+                      <span class="bg-primary/60 text-primary-fixed text-label-sm font-label-sm px-2.5 py-0.5 rounded-full border border-primary-fixed/30 font-bold">
+                        Top-order Batsman
+                      </span>
+                    </div>
+                    <h2 class="font-headline-lg-mobile md:font-headline-lg text-xl md:text-2xl font-bold text-on-primary mt-1 tracking-tight">
+                      Rohit Sharma
+                    </h2>
+                    <p class="font-body-sm text-body-sm text-on-primary-container flex items-center gap-1 mt-0.5">
+                      <span class="material-symbols-outlined text-sm">shield</span> Jersey #45 • Right-Handed Opener
+                    </p>
+                  </div>
+                </div>
+
+                <!-- Captain Core Stats Grid -->
+                <div class="w-full md:w-auto grid grid-cols-3 gap-2 sm:gap-3 bg-tertiary/60 backdrop-blur-sm p-3 rounded-lg border border-on-primary/10">
+                  <div class="text-center px-2 py-1">
+                    <span class="block text-label-sm font-label-sm text-primary-fixed/80 uppercase font-bold">Matches</span>
+                    <span class="block font-headline-md text-headline-md text-on-primary mt-0.5 font-bold">42</span>
+                  </div>
+                  <div class="text-center px-2 py-1 border-x border-on-primary/15">
+                    <span class="block text-label-sm font-label-sm text-primary-fixed/80 uppercase font-bold">Runs</span>
+                    <span class="block font-headline-md text-headline-md text-secondary-fixed mt-0.5 font-bold">1,840</span>
+                  </div>
+                  <div class="text-center px-2 py-1">
+                    <span class="block text-label-sm font-label-sm text-primary-fixed/80 uppercase font-bold">Strike Rate</span>
+                    <span class="block font-headline-md text-headline-md text-on-primary mt-0.5 font-bold">142.5</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Section Title with Quick Stat Summary -->
+            <div class="flex items-center justify-between mb-space-md">
+              <div>
+                <h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">Starting Squad Members</h3>
+                <p class="font-body-sm text-body-sm text-on-surface-variant">Tap any player card for comprehensive career &amp; match logs</p>
+              </div>
+              <div class="hidden sm:flex items-center gap-1 text-label-md font-label-md text-primary bg-primary-fixed/40 px-3 py-1 rounded-lg font-bold">
+                <span class="material-symbols-outlined text-sm">check_circle</span>
+                <span>Eligible for Next Toss</span>
+              </div>
+            </div>
+
+            <!-- Dynamic Players Grid -->
+            <div id="roster-players-grid" class="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+              <!-- Rendered by renderPlayersRoster -->
+            </div>
+
+            <!-- Bench / Squad Slot Summary Card -->
+            <article class="mt-space-md border-2 border-dashed border-outline-variant rounded-xl p-space-md flex flex-col items-center justify-center text-center bg-surface-container-low/30 hover:bg-surface-container-low transition-colors duration-150">
+              <div class="w-12 h-12 rounded-full bg-primary-fixed/50 text-primary flex items-center justify-center mb-2">
+                <span class="material-symbols-outlined text-2xl">group_add</span>
+              </div>
+              <h4 class="font-headline-sm text-headline-sm text-on-surface font-bold">Bench Reserves &amp; Open Slots</h4>
+              <p class="font-body-sm text-body-sm text-on-surface-variant max-w-xs mt-0.5">
+                Squad cap is 18 players. You have 3 open registration spots before tournament roster freeze.
+              </p>
+              <button class="mt-3 px-4 py-1.5 rounded-lg border border-primary text-primary hover:bg-primary hover:text-on-primary transition-all duration-150 font-label-md text-label-md flex items-center gap-1.5 font-bold" type="button" onclick="window.CricApp.openAddPlayerModal()">
+                <span class="material-symbols-outlined text-sm">person_add</span>
+                <span>Add Reserve Player</span>
+              </button>
+            </article>
+
+          </main>
+
+          <!-- Floating Action Button (Add Player to Squad) -->
+          <div class="fixed bottom-20 md:bottom-8 right-4 md:right-8 z-30">
+            <button class="flex items-center gap-2 bg-secondary-container hover:bg-[#e09214] text-on-secondary-fixed px-5 py-3.5 rounded-full shadow-[0_8px_24px_-4px_rgba(13,68,40,0.22)] active:scale-95 transition-all duration-150 font-label-lg text-label-lg font-bold border border-secondary-fixed/50" type="button" onclick="window.CricApp.openAddPlayerModal()">
+              <span class="material-symbols-outlined text-2xl font-bold">person_add</span>
+              <span>Add Player to Squad</span>
+            </button>
+          </div>
+        </section>
+
+        <!-- ========================================================================= -->
+        <!-- SCREEN 5: LIVE MATCHES & SCORING HUB                                      -->
+        <!-- ========================================================================= -->
+        <section id="screen-matches" class="screen-view pb-32">
+          <!-- Top App Bar -->
+          <header class="bg-surface border-b border-surface-variant shadow-sm flex justify-between items-center w-full px-margin h-14 sticky top-0 z-40">
+            <div class="flex items-center gap-space-sm">
+              <button class="p-2 rounded-lg text-primary hover:bg-surface-container-low" onclick="window.CricApp.goBack()">
+                <span class="material-symbols-outlined">arrow_back</span>
+              </button>
+              <div class="flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1;">scoreboard</span>
+                <span class="font-headline-sm text-headline-sm text-primary tracking-tight font-bold">Live Scoring Hub</span>
+              </div>
+            </div>
+            <div class="flex items-center gap-1 px-2.5 py-1 rounded-full bg-error text-white font-bold text-xs">
+              <span class="w-2 h-2 rounded-full bg-white animate-ping"></span>
+              <span>LIVE</span>
+            </div>
+          </header>
+
+          <main class="max-w-2xl mx-auto px-margin pt-space-md space-y-space-md">
+            
+            <!-- Live Match Hero Card -->
+            <div class="bg-gradient-to-br from-tertiary via-primary-container to-primary text-white rounded-2xl p-4 shadow-lg border border-primary-fixed/20 relative overflow-hidden">
+              <div class="flex justify-between items-center text-xs text-primary-fixed border-b border-white/10 pb-2 mb-3">
+                <span>Match 01 • T20 Champions Cup</span>
+                <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-secondary-container"></span> Center Pitch</span>
+              </div>
+              
+              <div class="flex justify-between items-center mb-4">
+                <div>
+                  <h3 class="font-extrabold text-xl">Apex Strikers</h3>
+                  <div class="flex items-baseline gap-2 mt-1">
+                    <span id="live-score-display" class="font-metric-display text-4xl font-extrabold text-secondary-fixed">184/4</span>
+                    <span id="live-overs-display" class="text-sm font-semibold text-primary-fixed">(18.2 ov)</span>
+                  </div>
+                  <p class="text-xs text-surface-container-high mt-1">CRR: 10.04 • Projected: 202</p>
+                </div>
+                <div class="text-right">
+                  <div class="w-12 h-12 rounded-full bg-black/30 border border-white/20 flex items-center justify-center font-bold text-lg">AS</div>
+                  <span class="text-xs text-primary-fixed-dim mt-1 block">Batting</span>
+                </div>
+              </div>
+
+              <!-- Current Batsmen On Crease -->
+              <div class="bg-black/25 backdrop-blur-sm rounded-xl p-3 border border-white/10 space-y-2 text-xs">
+                <div class="flex justify-between font-semibold">
+                  <span class="text-secondary-fixed flex items-center gap-1">
+                    <span class="w-1.5 h-1.5 rounded-full bg-secondary-container animate-pulse"></span>
+                    Rohit Sharma (c)*
+                  </span>
+                  <span>74 (46b, 7x4, 4x6) SR: 160.8</span>
+                </div>
+                <div class="flex justify-between text-surface-container-high">
+                  <span>Devon Conway</span>
+                  <span>42 (28b, 4x4, 1x6) SR: 150.0</span>
+                </div>
+              </div>
+
+              <!-- Over Ball Tracker -->
+              <div class="mt-3 pt-3 border-t border-white/15 flex items-center justify-between">
+                <span class="text-xs font-bold text-primary-fixed">This Over:</span>
+                <div id="live-current-over-balls" class="flex items-center gap-1.5">
+                  <div class="w-8 h-8 rounded-full bg-[#EDF5F0] text-slate-800 flex items-center justify-center text-xs font-bold">0</div>
+                  <div class="w-8 h-8 rounded-full bg-[#EDF5F0] text-slate-800 flex items-center justify-center text-xs font-bold">1</div>
+                  <div class="w-8 h-8 rounded-full bg-primary-container text-white flex items-center justify-center text-xs font-bold">4</div>
+                  <div class="w-8 h-8 rounded-full bg-tertiary text-white flex items-center justify-center text-xs font-bold">6</div>
+                  <div class="w-8 h-8 rounded-full bg-error text-white font-bold flex items-center justify-center text-xs animate-bounce">W</div>
+                  <div class="w-8 h-8 rounded-full bg-[#EDF5F0] text-slate-800 flex items-center justify-center text-xs font-bold">2</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Pitch Precision Scoring Keypad -->
+            <div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/60 p-4 shadow-sm">
+              <div class="flex justify-between items-center mb-3">
+                <h4 class="font-headline-sm text-sm font-bold text-primary flex items-center gap-1.5">
+                  <span class="material-symbols-outlined text-base">dialpad</span>
+                  Field Umpire Scoring Keypad
+                </h4>
+                <span class="text-xs text-outline font-bold">Tap to record delivery</span>
+              </div>
+              <div class="grid grid-cols-3 gap-2">
+                <button class="scoring-btn bg-surface-container-low hover:bg-surface-container text-on-surface" onclick="window.CricApp.recordScoreBall('0')">0 (Dot)</button>
+                <button class="scoring-btn bg-surface-container-low hover:bg-surface-container text-on-surface" onclick="window.CricApp.recordScoreBall('1')">1 Single</button>
+                <button class="scoring-btn bg-surface-container-low hover:bg-surface-container text-on-surface" onclick="window.CricApp.recordScoreBall('2')">2 Double</button>
+                <button class="scoring-btn bg-surface-container-low hover:bg-surface-container text-on-surface" onclick="window.CricApp.recordScoreBall('3')">3 Three</button>
+                <button class="scoring-btn bg-primary-container text-white" onclick="window.CricApp.recordScoreBall('4')">4 Four</button>
+                <button class="scoring-btn bg-tertiary text-white" onclick="window.CricApp.recordScoreBall('6')">6 Six</button>
+                <button class="scoring-btn bg-error text-white" onclick="window.CricApp.recordScoreBall('W')">W (Out)</button>
+                <button class="scoring-btn bg-surface-container-low hover:bg-surface-container text-primary" onclick="window.CricApp.recordScoreBall('WD')">Wide</button>
+                <button class="scoring-btn bg-surface-container-low hover:bg-surface-container text-primary" onclick="window.CricApp.recordScoreBall('NB')">No Ball</button>
+              </div>
+            </div>
+
+          </main>
+        </section>
+
+        <!-- ========================================================================= -->
+        <!-- SCREEN 6: VENUES DIRECTORY                                                -->
+        <!-- ========================================================================= -->
+        <section id="screen-venues" class="screen-view pb-32">
+          <!-- Top App Bar -->
+          <header class="bg-surface border-b border-surface-variant shadow-sm flex justify-between items-center w-full px-margin h-14 sticky top-0 z-40">
+            <div class="flex items-center gap-space-sm">
+              <button class="p-2 rounded-lg text-primary hover:bg-surface-container-low" onclick="window.CricApp.goBack()">
+                <span class="material-symbols-outlined">arrow_back</span>
+              </button>
+              <div class="flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1;">stadium</span>
+                <span class="font-headline-sm text-headline-sm text-primary tracking-tight font-bold">Championship Venues</span>
+              </div>
+            </div>
+            <button class="p-2 text-primary" onclick="window.CricApp.showToast('All 4 tournament stadiums certified by Pitch Board', 'verified')">
+              <span class="material-symbols-outlined">verified</span>
+            </button>
+          </header>
+
+          <main class="max-w-2xl mx-auto px-margin pt-space-md space-y-space-md">
+            <!-- Venue 1: National Cricket Arena -->
+            <article class="bg-surface-container-lowest rounded-xl border border-surface-variant overflow-hidden shadow-sm">
+              <div class="relative h-44 w-full">
+                <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBfU7SrLP8segH6olDGC53cU_Ud8k6vPpygiyswZkqLasp9yDgEqDnBKW8F9_dbJQ3S42-6qBJoNKAEqnwQRrU9I0My4DR0M6QfqJP4OAwdyvGP4n1KvKSA4wteX6gv-AN2BrsY8L0st3Wo8_J_NXBvOlbe3QyySbF0qCbzWBmzd_njA-tLuuLw3qFagx1cOIt7k0EI1bKNzJcUjYCdofy6B6V_gVZZ6tch5Dxz3JmOowmlTqVbPT1_Mg" alt="National Cricket Arena" class="w-full h-full object-cover" />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                <div class="absolute bottom-3 left-3 text-white">
+                  <h3 class="font-bold text-lg">National Cricket Arena</h3>
+                  <p class="text-xs text-primary-fixed">Host Venue • Green Park Complex</p>
+                </div>
+                <div class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2.5 py-0.5 rounded-lg text-xs font-bold text-on-surface flex items-center gap-1">
+                  <span class="material-symbols-outlined text-secondary-container text-sm" style="font-variation-settings: 'FILL' 1;">star</span> 4.8
+                </div>
+              </div>
+              <div class="p-4 space-y-3">
+                <p class="text-xs text-on-surface-variant">Plot 42, Sports City Boulevard, Green Park • 240+ Parking Slots</p>
+                <div class="flex items-center justify-between pt-2 border-t border-surface-container">
+                  <span class="text-xs font-bold text-primary">3 Live Match Pitches</span>
+                  <a href="https://maps.google.com" target="_blank" class="text-xs text-primary font-bold hover:underline flex items-center gap-1">
+                    <span>Directions</span>
+                    <span class="material-symbols-outlined text-xs">open_in_new</span>
+                  </a>
+                </div>
+              </div>
+            </article>
+
+            <!-- Venue 2: Metropolitan Central Oval -->
+            <article class="bg-surface-container-lowest rounded-xl border border-surface-variant p-4 shadow-sm space-y-2">
+              <div class="flex justify-between items-start">
+                <div>
+                  <h3 class="font-bold text-base text-on-surface">Metropolitan Central Oval</h3>
+                  <p class="text-xs text-on-surface-variant">Downtown Sports District • Floodlit Ground</p>
+                </div>
+                <span class="text-xs bg-secondary-fixed text-on-secondary-fixed font-bold px-2 py-0.5 rounded">Rating 4.9</span>
+              </div>
+              <p class="text-xs text-on-surface-variant">Capacity: 12,000 Spectators • Natural Bermuda Grass Turf</p>
+            </article>
+
+            <!-- Venue 3: Royal Turf Complex -->
+            <article class="bg-surface-container-lowest rounded-xl border border-surface-variant p-4 shadow-sm space-y-2">
+              <div class="flex justify-between items-start">
+                <div>
+                  <h3 class="font-bold text-base text-on-surface">Royal Turf Sports Complex</h3>
+                  <p class="text-xs text-on-surface-variant">Sector 12 Corporate Corridor • 2 Pitches</p>
+                </div>
+                <span class="text-xs bg-surface-container text-primary font-bold px-2 py-0.5 rounded">Rating 4.7</span>
+              </div>
+              <p class="text-xs text-on-surface-variant">Capacity: 4,500 Spectators • Corporate Hospitality Lounges</p>
+            </article>
+          </main>
+        </section>
+
+      </main>
+
+      <!-- ========================================================================= -->
+      <!-- SHARED BOTTOM NAVIGATION BAR                                              -->
+      <!-- ========================================================================= -->
+      <nav class="fixed bottom-0 left-0 w-full z-40 flex justify-around items-center px-space-xs py-space-xs bg-surface shadow-md border-t border-surface-variant">
+        <!-- Tab 1: Tournaments -->
+        <a href="#tournaments" class="bottom-nav-tab flex flex-col items-center justify-center bg-primary-container text-on-primary rounded-xl px-3 py-1 shadow-sm transition-transform duration-100 active:scale-95" data-tab="tournaments">
+          <span class="material-symbols-outlined text-[22px] text-white" data-icon="emoji_events">emoji_events</span>
+          <span class="text-label-sm font-label-sm text-white font-bold mt-0.5">Tournaments</span>
+        </a>
+        <!-- Tab 2: Matches -->
+        <a href="#matches" class="bottom-nav-tab flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:bg-surface-container-low transition-colors duration-150 active:scale-95" data-tab="matches">
+          <span class="material-symbols-outlined text-[22px]" data-icon="scoreboard">scoreboard</span>
+          <span class="text-label-sm font-label-sm mt-0.5">Matches</span>
+        </a>
+        <!-- Tab 3: Teams -->
+        <a href="#teams" class="bottom-nav-tab flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:bg-surface-container-low transition-colors duration-150 active:scale-95" data-tab="teams">
+          <span class="material-symbols-outlined text-[22px]" data-icon="groups">groups</span>
+          <span class="text-label-sm font-label-sm mt-0.5">Teams</span>
+        </a>
+        <!-- Tab 4: Venues -->
+        <a href="#venues" class="bottom-nav-tab flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:bg-surface-container-low transition-colors duration-150 active:scale-95" data-tab="venues">
+          <span class="material-symbols-outlined text-[22px]" data-icon="stadium">stadium</span>
+          <span class="text-label-sm font-label-sm mt-0.5">Venues</span>
+        </a>
+      </nav>
+
+      <!-- Phone Home Indicator Bar -->
+      <div class="phone-home-indicator"></div>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL BOTTOM SHEETS                                                       -->
+  <!-- ========================================================================= -->
+
+  <!-- 1. Player Detail Sheet -->
+  <div id="modal-player-detail" class="modal-overlay" onclick="if(event.target===this) window.CricApp.closePlayerModal()">
+    <div class="modal-sheet">
+      <div class="sheet-drag-handle"></div>
+      <div class="flex items-start justify-between mb-4">
+        <div class="flex items-center gap-3">
+          <div id="sheet-player-avatar" class="w-16 h-16 rounded-full overflow-hidden bg-surface-container ring-2 ring-primary/20 shrink-0"></div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h3 id="sheet-player-name" class="font-bold text-xl text-on-surface">Rohit Sharma</h3>
+              <span id="sheet-player-jersey" class="text-xs font-bold bg-surface-container px-2 py-0.5 rounded">#45</span>
+            </div>
+            <p id="sheet-player-role" class="text-xs text-primary font-bold">Top-order Batsman</p>
+            <p id="sheet-player-style" class="text-xs text-outline">Right-Handed Opener</p>
+          </div>
+        </div>
+        <button class="p-2 text-outline hover:text-on-surface" onclick="window.CricApp.closePlayerModal()">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <!-- Career Scoreboard Grid -->
+      <div class="grid grid-cols-4 gap-2 bg-surface-container-low p-3 rounded-xl mb-4 text-center">
+        <div>
+          <span class="text-[10px] uppercase text-outline block font-bold">Matches</span>
+          <span id="sheet-stat-matches" class="text-sm font-bold text-on-surface">42</span>
+        </div>
+        <div>
+          <span class="text-[10px] uppercase text-outline block font-bold">Runs</span>
+          <span id="sheet-stat-runs" class="text-sm font-bold text-primary">1840</span>
+        </div>
+        <div>
+          <span class="text-[10px] uppercase text-outline block font-bold">Strike Rate</span>
+          <span id="sheet-stat-sr" class="text-sm font-bold text-on-surface">142.5</span>
+        </div>
+        <div>
+          <span class="text-[10px] uppercase text-outline block font-bold">Average</span>
+          <span id="sheet-stat-avg" class="text-sm font-bold text-on-surface">47.1</span>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-3 gap-2 bg-surface-container-low p-3 rounded-xl mb-4 text-center">
+        <div>
+          <span class="text-[10px] uppercase text-outline block font-bold">High Score</span>
+          <span id="sheet-stat-hs" class="text-sm font-bold text-secondary">118*</span>
+        </div>
+        <div>
+          <span class="text-[10px] uppercase text-outline block font-bold">Wickets</span>
+          <span id="sheet-stat-wickets" class="text-sm font-bold text-on-surface">8</span>
+        </div>
+        <div>
+          <span class="text-[10px] uppercase text-outline block font-bold">Economy</span>
+          <span id="sheet-stat-econ" class="text-sm font-bold text-on-surface">6.9</span>
+        </div>
+      </div>
+
+      <!-- Form Guide -->
+      <div class="mb-4">
+        <span class="text-xs font-bold text-outline uppercase block mb-2">Recent 5 Innings Form</span>
+        <div id="sheet-player-form" class="flex gap-2"></div>
+      </div>
+
+      <button class="w-full py-3 bg-primary-container text-white font-bold rounded-xl shadow active:scale-95 transition-transform" onclick="window.CricApp.closePlayerModal()">
+        Done
+      </button>
+    </div>
+  </div>
+
+  <!-- 2. Add Player Modal -->
+  <div id="modal-add-player" class="modal-overlay" onclick="if(event.target===this) window.CricApp.closeAddPlayerModal()">
+    <div class="modal-sheet">
+      <div class="sheet-drag-handle"></div>
+      <div class="flex justify-between items-center mb-3">
+        <h3 class="font-bold text-lg text-primary flex items-center gap-1.5">
+          <span class="material-symbols-outlined">person_add</span>
+          Add Player to Apex Strikers
+        </h3>
+        <button class="p-1 text-outline hover:text-on-surface" onclick="window.CricApp.closeAddPlayerModal()">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <form id="add-player-form" class="space-y-3">
+        <div>
+          <label class="block text-xs font-bold mb-1">Player Full Name *</label>
+          <input id="new-player-name" class="w-full p-2.5 border border-outline-variant rounded-lg text-sm" placeholder="e.g. Mitchell Santner" required />
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-xs font-bold mb-1">Jersey Number *</label>
+            <input id="new-player-jersey" class="w-full p-2.5 border border-outline-variant rounded-lg text-sm" placeholder="e.g. 74" required />
+          </div>
+          <div>
+            <label class="block text-xs font-bold mb-1">Playing Role *</label>
+            <select id="new-player-role" class="w-full p-2.5 border border-outline-variant rounded-lg text-sm">
+              <option value="Batsman">Batsman</option>
+              <option value="Fast Bowler">Bowler (Fast)</option>
+              <option value="Spin Bowler">Bowler (Spin)</option>
+              <option value="All-Rounder">All-Rounder</option>
+              <option value="Wicket-Keeper">Wicket-Keeper</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-bold mb-1">Sub-Role / Bowling Style</label>
+          <input id="new-player-subrole" class="w-full p-2.5 border border-outline-variant rounded-lg text-sm" placeholder="e.g. LHB / Slow Left Arm" />
+        </div>
+        <button type="submit" class="w-full py-3 bg-secondary-container text-on-secondary-fixed font-bold rounded-xl shadow mt-2">
+          Confirm &amp; Add Player
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 3. Create Tournament Modal -->
+  <div id="modal-create-tournament" class="modal-overlay" onclick="if(event.target===this) window.CricApp.closeCreateTourneyModal()">
+    <div class="modal-sheet">
+      <div class="sheet-drag-handle"></div>
+      <div class="flex justify-between items-center mb-3">
+        <h3 class="font-bold text-lg text-primary flex items-center gap-1.5">
+          <span class="material-symbols-outlined">add_circle</span>
+          Create New Tournament
+        </h3>
+        <button class="p-1 text-outline hover:text-on-surface" onclick="window.CricApp.closeCreateTourneyModal()">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <form id="create-tournament-form" class="space-y-3">
+        <div>
+          <label class="block text-xs font-bold mb-1">Tournament Title *</label>
+          <input id="new-tourney-title" class="w-full p-2.5 border border-outline-variant rounded-lg text-sm" placeholder="e.g. Champions Trophy Autumn 2025" required />
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-xs font-bold mb-1">Format *</label>
+            <select id="new-tourney-format" class="w-full p-2.5 border border-outline-variant rounded-lg text-sm">
+              <option value="T20 Knockout">T20 Knockout</option>
+              <option value="T20 League + Knockout">T20 League</option>
+              <option value="Super Sixes">Super Sixes</option>
+              <option value="T10 Blitz">T10 Blitz</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold mb-1">Entry Fee ($) *</label>
+            <input id="new-tourney-fee" class="w-full p-2.5 border border-outline-variant rounded-lg text-sm" placeholder="300" required />
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-xs font-bold mb-1">Host Venue *</label>
+            <input id="new-tourney-venue" class="w-full p-2.5 border border-outline-variant rounded-lg text-sm" placeholder="National Cricket Arena" required />
+          </div>
+          <div>
+            <label class="block text-xs font-bold mb-1">Max Teams *</label>
+            <input id="new-tourney-teams" class="w-full p-2.5 border border-outline-variant rounded-lg text-sm" type="number" value="16" min="4" max="32" required />
+          </div>
+        </div>
+        <button type="submit" class="w-full py-3 bg-primary-container text-white font-bold rounded-xl shadow mt-2">
+          Publish Tournament
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 4. Digital Team Pass Confirmation Modal -->
+  <div id="modal-team-pass" class="modal-overlay">
+    <div class="modal-sheet">
+      <div class="sheet-drag-handle"></div>
+      <div class="text-center mb-4">
+        <div class="w-14 h-14 rounded-full bg-primary-fixed text-primary flex items-center justify-center mx-auto mb-2">
+          <span class="material-symbols-outlined text-3xl">verified</span>
+        </div>
+        <h3 class="font-extrabold text-xl text-primary">Registration Confirmed!</h3>
+        <p class="text-xs text-on-surface-variant">Your team is officially registered for Premier Championship 2025</p>
+      </div>
+
+      <!-- Ticket Card -->
+      <div class="bg-surface-container-low border border-primary-container/30 rounded-2xl p-4 relative mb-4">
+        <div class="ticket-edge-left"></div>
+        <div class="ticket-edge-right"></div>
+        <div class="flex justify-between items-start mb-3 border-b border-surface-variant pb-2">
+          <div>
+            <span class="text-[10px] uppercase font-bold text-secondary">Official Digital Team Pass</span>
+            <h4 id="ticket-team-name" class="font-extrabold text-base text-primary">Apex Strikers Cricket Club</h4>
+          </div>
+          <span id="ticket-id" class="text-xs font-mono font-bold bg-white px-2 py-0.5 rounded shadow-sm">CP-2025-AS-8492</span>
+        </div>
+        <div class="grid grid-cols-2 gap-2 text-xs mb-3">
+          <div>
+            <span class="text-outline uppercase block text-[10px] font-bold">Team Captain</span>
+            <span id="ticket-captain" class="font-bold">Rohit Sharma</span>
+          </div>
+          <div>
+            <span class="text-outline uppercase block text-[10px] font-bold">Squad Size</span>
+            <span id="ticket-squad-size" class="font-bold">14 Players</span>
+          </div>
+        </div>
+        <div class="flex items-center justify-between pt-2 border-t border-surface-variant">
+          <span class="text-xs text-primary font-bold">Status: Slot Guaranteed</span>
+          <span class="material-symbols-outlined text-2xl text-primary">qr_code_2</span>
+        </div>
+      </div>
+
+      <button class="w-full py-3 bg-primary-container text-white font-bold rounded-xl shadow active:scale-95 transition-transform" onclick="window.CricApp.closeTeamPassModal()">
+        Go to Team Squad &amp; Roster
+      </button>
+    </div>
+  </div>
+
+  <!-- 5. Notifications Modal -->
+  <div id="modal-notifications" class="modal-overlay" onclick="if(event.target===this) window.CricApp.closeNotificationsModal()">
+    <div class="modal-sheet">
+      <div class="sheet-drag-handle"></div>
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="font-bold text-lg text-primary flex items-center gap-2">
+          <span class="material-symbols-outlined">notifications</span>
+          Tournament Notifications
+        </h3>
+        <button class="p-1 text-outline hover:text-on-surface" onclick="window.CricApp.closeNotificationsModal()">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+      <div class="space-y-3 mb-4">
+        <div class="p-3 bg-surface-container-low rounded-xl border border-primary-container/20">
+          <div class="flex justify-between text-xs font-bold text-primary mb-1">
+            <span>Toss Completed</span>
+            <span class="text-outline">10 mins ago</span>
+          </div>
+          <p class="text-xs text-on-surface">Apex Strikers won the toss and elected to bat first against Royal Rhinos.</p>
+        </div>
+        <div class="p-3 bg-surface-container-low rounded-xl border border-surface-variant">
+          <div class="flex justify-between text-xs font-bold text-secondary mb-1">
+            <span>Slot Approved</span>
+            <span class="text-outline">1 hour ago</span>
+          </div>
+          <p class="text-xs text-on-surface">Premier Championship 2025: Team slot approved for Metro Lions.</p>
+        </div>
+        <div class="p-3 bg-surface-container-low rounded-xl border border-surface-variant">
+          <div class="flex justify-between text-xs font-bold text-outline mb-1">
+            <span>Pitch Inspection</span>
+            <span class="text-outline">3 hours ago</span>
+          </div>
+          <p class="text-xs text-on-surface">Center pitch at National Cricket Arena passed drainage and hardness tests.</p>
+        </div>
+      </div>
+      <button class="w-full py-2.5 bg-surface-container text-primary font-bold rounded-xl" onclick="window.CricApp.closeNotificationsModal()">
+        Mark All as Read
+      </button>
+    </div>
+  </div>
+
+  <!-- Application Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

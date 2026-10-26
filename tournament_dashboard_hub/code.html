@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CricMatch Pro - Tournament Hub</title>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts: Plus Jakarta Sans & Inter -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS v3 -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "primary-fixed-dim": "#8fd6a7",
+            "on-background": "#141d21",
+            "on-error-container": "#93000a",
+            "surface-container-low": "#ecf5fa",
+            "on-primary": "#ffffff",
+            "surface-bright": "#f3faff",
+            "inverse-surface": "#293236",
+            "on-primary-fixed-variant": "#00522e",
+            "primary": "#004425",
+            "on-error": "#ffffff",
+            "on-primary-fixed": "#002110",
+            "on-primary-container": "#8dd4a5",
+            "primary-container": "#135d38",
+            "on-secondary-fixed-variant": "#653e00",
+            "error-container": "#ffdad6",
+            "background": "#f3faff",
+            "tertiary-container": "#285b3d",
+            "surface": "#f3faff",
+            "surface-variant": "#dae4e9",
+            "outline-variant": "#bfc9bf",
+            "surface-container-highest": "#dae4e9",
+            "secondary-fixed": "#ffddb8",
+            "surface-container": "#e6eff5",
+            "on-surface": "#141d21",
+            "surface-dim": "#d2dbe1",
+            "inverse-on-surface": "#e9f2f8",
+            "on-surface-variant": "#404941",
+            "outline": "#707971",
+            "on-tertiary-container": "#9ad1ab",
+            "tertiary": "#0c4327",
+            "on-secondary-container": "#684000",
+            "inverse-primary": "#8fd6a7",
+            "tertiary-fixed-dim": "#9cd3ad",
+            "error": "#ba1a1a",
+            "primary-fixed": "#abf3c2",
+            "surface-container-high": "#e0eaef",
+            "secondary-container": "#fea619",
+            "on-secondary": "#ffffff",
+            "surface-tint": "#256b44",
+            "on-secondary-fixed": "#2a1700",
+            "on-tertiary-fixed": "#002110",
+            "tertiary-fixed": "#b8efc8",
+            "on-tertiary": "#ffffff",
+            "surface-container-lowest": "#ffffff",
+            "secondary": "#855300",
+            "on-tertiary-fixed-variant": "#1c5033",
+            "secondary-fixed-dim": "#ffb95f"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "space-xs": "0.25rem",
+            "space-sm": "0.5rem",
+            "space-md": "1rem",
+            "space-lg": "1.5rem",
+            "space-xl": "2rem",
+            "margin": "1rem",
+            "margin-tablet": "1.5rem",
+            "gutter": "1rem",
+            "gutter-sm": "0.75rem"
+          },
+          "fontFamily": {
+            "headline-xl-mobile": ["Plus Jakarta Sans"],
+            "headline-lg-mobile": ["Plus Jakarta Sans"],
+            "headline-md": ["Plus Jakarta Sans"],
+            "headline-sm": ["Plus Jakarta Sans"],
+            "body-lg": ["Inter"],
+            "body-md": ["Inter"],
+            "body-sm": ["Inter"],
+            "label-lg": ["Plus Jakarta Sans"],
+            "label-md": ["Plus Jakarta Sans"],
+            "label-sm": ["Plus Jakarta Sans"],
+            "metric-display": ["Plus Jakarta Sans"]
+          },
+          "fontSize": {
+            "headline-xl-mobile": ["30px", { "lineHeight": "38px", "fontWeight": "800" }],
+            "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+            "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "700" }],
+            "headline-sm": ["18px", { "lineHeight": "24px", "fontWeight": "600" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+            "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+            "body-sm": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+            "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "700" }],
+            "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.04em", "fontWeight": "600" }],
+            "label-sm": ["10px", { "lineHeight": "14px", "letterSpacing": "0.06em", "fontWeight": "700" }],
+            "metric-display": ["44px", { "lineHeight": "48px", "fontWeight": "800" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    .custom-scroll::-webkit-scrollbar {
+      display: none;
+    }
+    .custom-scroll {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    .turf-card-shadow {
+      box-shadow: 0 2px 8px -2px rgba(19, 93, 56, 0.08);
+    }
+    .featured-banner-shadow {
+      box-shadow: 0 8px 24px -4px rgba(13, 68, 40, 0.16);
+    }
+    .fab-elevation {
+      box-shadow: 0 10px 25px -3px rgba(19, 93, 56, 0.35);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface antialiased min-h-screen pb-28">
+<!-- TopAppBar (Anchored Shared Component) -->
+<header class="sticky top-0 z-40 bg-surface shadow-sm border-b border-surface-variant flex justify-between items-center w-full px-margin h-14">
+<!-- Leading brand unit -->
+<div class="flex items-center space-x-2">
+<div class="w-9 h-9 rounded-lg bg-primary-container flex items-center justify-center text-on-primary shadow-sm">
+<span class="material-symbols-outlined text-[20px]" data-icon="sports_cricket">sports_cricket</span>
+</div>
+<span class="text-headline-sm font-headline-sm text-primary tracking-tight">CricMatch Pro</span>
+</div>
+<!-- Trailing Action Icons & Profile -->
+<div class="flex items-center space-x-2">
+<button aria-label="Notifications" class="relative p-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors duration-150 active:scale-95">
+<span class="material-symbols-outlined text-[22px]" data-icon="notifications">notifications</span>
+<!-- Red unread notification ping -->
+<span class="absolute top-2 right-2 w-2 h-2 rounded-full bg-error ring-2 ring-surface"></span>
+</button>
+<!-- User Avatar -->
+<div class="relative w-8 h-8 rounded-full ring-2 ring-primary-container/20 overflow-hidden ml-1">
+<img class="w-full h-full object-cover" data-alt="A sharp profile portrait of a confident cricket tournament director wearing a navy polo shirt against a blurred, sunlit athletic stadium pitch backdrop. Natural warm sunlight illuminates the professional headshot in high-definition sports style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDztwQ_VyDNyMJ-x7vySt4scNralgufLOHDebsImMk2Mwr3eRHOHNlBjTLrdFKaYRpJRUmPuIJuyHmtUwikvZEmWdBnqTdA8BjulnM5Y1My8FfK1gqf8Ng6krmE3SvaemSbONOj46XQvBh1q7eg3xnem-u2DgZLvhPnRhvEuJVz9mFWqht-qyGUOjym9cJ95qI8knSUIME4g7DxYlbwru4vH278NP4v9kQu2KUl95dZce75jidOh26Yyw"/>
+</div>
+</div>
+</header>
+<!-- Main Canvas Container -->
+<main class="px-margin pt-space-md space-y-space-lg">
+<!-- Search Bar Component -->
+<section>
+<div class="relative flex items-center w-full">
+<span class="material-symbols-outlined absolute left-3.5 text-outline text-[20px]" data-icon="search">search</span>
+<input class="w-full pl-10 pr-10 py-2.5 rounded-xl bg-surface-container-lowest border border-outline-variant/60 text-on-surface text-body-md font-body-md placeholder:text-outline focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-all shadow-sm" placeholder="Search tournaments, teams, grounds..." type="search"/>
+<button aria-label="Filter Search" class="absolute right-3 p-1 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[18px]" data-icon="tune">tune</span>
+</button>
+</div>
+</section>
+<!-- Featured Tournament Banner Carousel -->
+<section class="space-y-space-xs">
+<div class="flex items-center justify-between">
+<div class="flex items-center space-x-1.5">
+<span class="w-2 h-2 rounded-full bg-secondary-container"></span>
+<h2 class="text-label-md font-label-md text-on-surface-variant uppercase tracking-wider">Spotlight Championship</h2>
+</div>
+<div class="flex items-center space-x-1 text-label-sm font-label-sm text-primary font-bold">
+<span>1 / 3</span>
+</div>
+</div>
+<!-- Featured Card Container -->
+<div class="relative overflow-hidden rounded-xl bg-gradient-to-br from-primary via-primary-container to-tertiary text-on-primary p-space-md featured-banner-shadow">
+<!-- Subtle Pitch Lines Texture Overlay -->
+<div class="absolute inset-0 opacity-10 pointer-events-none bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:16px_16px]"></div>
+<!-- Card Top Bar: Live/Featured Badge + Trophy Icon -->
+<div class="relative z-10 flex items-center justify-between mb-3">
+<div class="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-full bg-secondary-container text-on-secondary-fixed text-label-sm font-label-sm shadow-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-on-secondary-fixed animate-ping"></span>
+<span class="font-extrabold uppercase">FEATURED TOURNAMENT</span>
+</div>
+<div class="flex items-center space-x-1 px-2.5 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-secondary-fixed text-label-sm font-label-sm">
+<span class="material-symbols-outlined text-[16px]" data-icon="trophy" data-weight="fill" style="font-variation-settings: 'FILL' 1;">trophy</span>
+<span>Grand Slam</span>
+</div>
+</div>
+<!-- Tournament Title -->
+<div class="relative z-10 mb-4">
+<h3 class="text-headline-md font-headline-md text-white tracking-tight">Premier Cricket Championship 2025</h3>
+<p class="text-body-sm font-body-sm text-primary-fixed flex items-center space-x-1 mt-0.5">
+<span class="material-symbols-outlined text-[14px]" data-icon="location_on">location_on</span>
+<span>Metropolitan Central Oval • Starts Oct 28</span>
+</p>
+</div>
+<!-- Metrics Grid (Prize Pool & Registered Teams) -->
+<div class="relative z-10 grid grid-cols-2 gap-2 p-2.5 rounded-lg bg-black/20 backdrop-blur-sm border border-white/10 mb-4">
+<div>
+<span class="text-label-sm font-label-sm text-surface-container-high block">Prize Pool</span>
+<span class="text-headline-sm font-headline-sm text-secondary-fixed-dim">$15,000</span>
+</div>
+<div>
+<div class="flex justify-between items-center">
+<span class="text-label-sm font-label-sm text-surface-container-high">Teams Registered</span>
+<span class="text-label-sm font-label-sm text-primary-fixed font-bold">14/16</span>
+</div>
+<!-- Progress Bar -->
+<div class="w-full bg-white/20 h-1.5 rounded-full mt-1.5 overflow-hidden">
+<div class="bg-secondary-container h-full rounded-full" style="width: 87.5%"></div>
+</div>
+</div>
+</div>
+<!-- CTA & Status Footer -->
+<div class="relative z-10 flex items-center justify-between pt-1">
+<div class="text-label-sm font-label-sm text-white/80 flex items-center space-x-1">
+<span class="material-symbols-outlined text-[14px]" data-icon="timer">timer</span>
+<span>2 spots remaining</span>
+</div>
+<button class="px-4 py-2 rounded-lg bg-secondary-container hover:bg-secondary-fixed-dim text-on-secondary-fixed text-label-md font-label-md transition-all shadow-md active:scale-95 flex items-center space-x-1">
+<span>View Details</span>
+<span class="material-symbols-outlined text-[16px]" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Filter Chips (Horizontal Scrollable) -->
+<section>
+<div class="flex items-center space-x-2 overflow-x-auto custom-scroll py-1">
+<button class="px-4 py-1.5 rounded-full bg-primary-container text-white text-label-md font-label-md whitespace-nowrap shadow-sm">
+          All Tournaments
+        </button>
+<button class="px-4 py-1.5 rounded-full bg-surface-container-lowest border border-outline-variant text-on-surface-variant hover:bg-surface-container-low text-label-md font-label-md whitespace-nowrap transition-colors">
+          Upcoming
+        </button>
+<button class="px-3.5 py-1.5 rounded-full bg-surface-container-lowest border border-outline-variant text-on-surface-variant hover:bg-surface-container-low text-label-md font-label-md whitespace-nowrap flex items-center space-x-1.5 transition-colors">
+<span class="w-2 h-2 rounded-full bg-secondary-container animate-pulse"></span>
+<span>Live (2)</span>
+</button>
+<button class="px-4 py-1.5 rounded-full bg-surface-container-lowest border border-outline-variant text-on-surface-variant hover:bg-surface-container-low text-label-md font-label-md whitespace-nowrap transition-colors">
+          Completed
+        </button>
+</div>
+</section>
+<!-- Tournament Cards Section -->
+<section class="space-y-space-md">
+<div class="flex items-center justify-between">
+<h2 class="text-headline-sm font-headline-sm text-on-background">Upcoming &amp; New</h2>
+<a class="text-label-md font-label-md text-primary-container hover:underline flex items-center" href="#view-all">
+          See All (18)
+        </a>
+</div>
+<div class="space-y-space-md">
+<!-- Card 1: Super Sixes Weekend Trophy -->
+<article class="bg-surface-container-lowest rounded-xl border border-outline-variant/70 p-space-md turf-card-shadow relative overflow-hidden transition-all hover:border-primary-container/40">
+<!-- Active State Left Border Accent -->
+<div class="absolute left-0 top-0 bottom-0 w-1.5 bg-secondary-container"></div>
+<!-- Header -->
+<div class="flex items-start justify-between gap-2 mb-2 pl-1">
+<div>
+<span class="inline-block px-2 py-0.5 rounded bg-surface-container-low text-tertiary text-label-sm font-label-sm font-bold uppercase mb-1">
+                T20 Knockout
+              </span>
+<h3 class="text-headline-sm font-headline-sm text-on-surface leading-snug">Super Sixes Weekend Trophy</h3>
+</div>
+<div class="text-right flex-shrink-0">
+<span class="text-label-sm font-label-sm text-outline uppercase block">Entry Fee</span>
+<span class="text-headline-sm font-headline-sm text-primary font-bold">$250<span class="text-body-sm font-body-sm text-outline font-normal">/team</span></span>
+</div>
+</div>
+<!-- Venue Location Tag -->
+<div class="flex items-center text-body-sm font-body-sm text-on-surface-variant mb-3 pl-1">
+<span class="material-symbols-outlined text-[16px] text-outline mr-1" data-icon="stadium">stadium</span>
+<span class="truncate">National Cricket Arena, Sector 4</span>
+</div>
+<!-- Key Dates & Info Banner -->
+<div class="grid grid-cols-2 gap-2 bg-surface-container-low/70 rounded-lg p-2.5 mb-4 text-body-sm font-body-sm pl-2">
+<div>
+<span class="text-label-sm font-label-sm text-outline uppercase block">Tournament Starts</span>
+<span class="font-headline-sm text-body-md text-on-surface font-semibold flex items-center gap-1 mt-0.5">
+<span class="material-symbols-outlined text-[15px] text-primary" data-icon="calendar_month">calendar_month</span>
+                Oct 15, 2025
+              </span>
+</div>
+<div>
+<span class="text-label-sm font-label-sm text-error uppercase block">Reg. Deadline</span>
+<span class="font-headline-sm text-body-md text-error font-semibold flex items-center gap-1 mt-0.5">
+<span class="material-symbols-outlined text-[15px] text-error" data-icon="alarm">alarm</span>
+                Oct 10, 2025
+              </span>
+</div>
+</div>
+<!-- Footer Actions -->
+<div class="flex items-center justify-between pt-2 border-t border-surface-variant pl-1">
+<div class="flex items-center space-x-1.5 text-body-sm font-body-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px] text-primary" data-icon="groups">groups</span>
+<span>12 of 16 Registered</span>
+</div>
+<button class="px-4 py-2 rounded-lg bg-primary-container text-white text-label-md font-label-md hover:bg-primary transition-colors active:scale-95 shadow-sm flex items-center space-x-1.5">
+<span>Register Team</span>
+<span class="material-symbols-outlined text-[16px]" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</article>
+<!-- Card 2: Corporate Premier League Season 4 -->
+<article class="bg-surface-container-lowest rounded-xl border border-outline-variant/70 p-space-md turf-card-shadow relative overflow-hidden transition-all hover:border-primary-container/40">
+<!-- Active State Left Border Accent -->
+<div class="absolute left-0 top-0 bottom-0 w-1.5 bg-primary"></div>
+<!-- Header -->
+<div class="flex items-start justify-between gap-2 mb-2 pl-1">
+<div>
+<span class="inline-block px-2 py-0.5 rounded bg-surface-container-low text-tertiary text-label-sm font-label-sm font-bold uppercase mb-1">
+                T20 League + Knockout
+              </span>
+<h3 class="text-headline-sm font-headline-sm text-on-surface leading-snug">Corporate Premier League Season 4</h3>
+</div>
+<div class="text-right flex-shrink-0">
+<span class="text-label-sm font-label-sm text-outline uppercase block">Entry Fee</span>
+<span class="text-headline-sm font-headline-sm text-primary font-bold">$400<span class="text-body-sm font-body-sm text-outline font-normal">/team</span></span>
+</div>
+</div>
+<!-- Venue Location Tag -->
+<div class="flex items-center text-body-sm font-body-sm text-on-surface-variant mb-3 pl-1">
+<span class="material-symbols-outlined text-[16px] text-outline mr-1" data-icon="stadium">stadium</span>
+<span class="truncate">Royal Turf Sports Complex</span>
+</div>
+<!-- Key Dates & Info Banner -->
+<div class="grid grid-cols-2 gap-2 bg-surface-container-low/70 rounded-lg p-2.5 mb-4 text-body-sm font-body-sm pl-2">
+<div>
+<span class="text-label-sm font-label-sm text-outline uppercase block">Tournament Starts</span>
+<span class="font-headline-sm text-body-md text-on-surface font-semibold flex items-center gap-1 mt-0.5">
+<span class="material-symbols-outlined text-[15px] text-primary" data-icon="calendar_month">calendar_month</span>
+                Nov 02, 2025
+              </span>
+</div>
+<div>
+<span class="text-label-sm font-label-sm text-outline uppercase block">Reg. Deadline</span>
+<span class="font-headline-sm text-body-md text-on-surface font-semibold flex items-center gap-1 mt-0.5">
+<span class="material-symbols-outlined text-[15px] text-outline" data-icon="alarm">alarm</span>
+                Oct 26, 2025
+              </span>
+</div>
+</div>
+<!-- Footer Actions -->
+<div class="flex items-center justify-between pt-2 border-t border-surface-variant pl-1">
+<div class="flex items-center space-x-1.5 text-body-sm font-body-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px] text-primary" data-icon="groups">groups</span>
+<span>8 of 20 Registered</span>
+</div>
+<button class="px-4 py-2 rounded-lg bg-primary-container text-white text-label-md font-label-md hover:bg-primary transition-colors active:scale-95 shadow-sm flex items-center space-x-1.5">
+<span>Register Team</span>
+<span class="material-symbols-outlined text-[16px]" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</article>
+<!-- Card 3: Youth Grassroots Cup U-19 -->
+<article class="bg-surface-container-lowest rounded-xl border border-outline-variant/70 p-space-md turf-card-shadow relative overflow-hidden transition-all hover:border-primary-container/40">
+<!-- Subtle Accent -->
+<div class="absolute left-0 top-0 bottom-0 w-1.5 bg-outline-variant"></div>
+<!-- Header -->
+<div class="flex items-start justify-between gap-2 mb-2 pl-1">
+<div>
+<span class="inline-block px-2 py-0.5 rounded bg-surface-container-low text-tertiary text-label-sm font-label-sm font-bold uppercase mb-1">
+                Junior Division (U-19)
+              </span>
+<h3 class="text-headline-sm font-headline-sm text-on-surface leading-snug">Youth Grassroots Cup U-19</h3>
+</div>
+<div class="text-right flex-shrink-0">
+<span class="text-label-sm font-label-sm text-outline uppercase block">Entry Fee</span>
+<span class="text-headline-sm font-headline-sm text-primary font-bold">$120<span class="text-body-sm font-body-sm text-outline font-normal">/team</span></span>
+</div>
+</div>
+<!-- Venue Location Tag -->
+<div class="flex items-center text-body-sm font-body-sm text-on-surface-variant mb-3 pl-1">
+<span class="material-symbols-outlined text-[16px] text-outline mr-1" data-icon="location_on">location_on</span>
+<span class="truncate">City Greens Oval</span>
+</div>
+<!-- Tournament Schedule Quick Info -->
+<div class="flex items-center justify-between bg-surface-container-low/70 rounded-lg p-2.5 mb-4 text-body-sm font-body-sm pl-2">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-primary" data-icon="event">event</span>
+<div>
+<span class="text-label-sm font-label-sm text-outline uppercase block">Commences</span>
+<span class="font-headline-sm text-body-md text-on-surface font-semibold">Nov 18, 2025</span>
+</div>
+</div>
+<div class="text-right">
+<span class="text-label-sm font-label-sm text-outline uppercase block">Open Slots</span>
+<span class="font-headline-sm text-body-md text-primary font-semibold">6 Spots Open</span>
+</div>
+</div>
+<!-- Footer Actions -->
+<div class="flex items-center justify-between pt-2 border-t border-surface-variant pl-1">
+<span class="text-label-md font-label-md text-on-surface-variant">Entries Close Nov 10</span>
+<button class="px-4 py-2 rounded-lg bg-surface-container-low text-primary font-bold border border-primary-container/30 text-label-md font-label-md hover:bg-surface-container transition-colors active:scale-95 flex items-center space-x-1">
+<span>View Fixture</span>
+<span class="material-symbols-outlined text-[16px]" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</article>
+</div>
+</section>
+</main>
+<!-- Contextual Floating Action Button (FAB) -->
+<aside class="fixed bottom-20 right-4 z-40">
+<button aria-label="Create Tournament" class="flex items-center space-x-2 bg-secondary-container hover:bg-secondary-fixed-dim text-on-secondary-fixed px-4 py-3 rounded-full fab-elevation active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-[20px]" data-icon="add">add</span>
+<span class="text-label-lg font-label-lg font-bold">Create Tournament</span>
+</button>
+</aside>
+<!-- BottomNavBar (Anchored Shared Component) -->
+<!-- Strict Hierarchy Active State Determination: Page is Tournament Hub/Home, so label 'Tournaments' is ACTIVE -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-space-xs py-space-xs bg-surface shadow-md">
+<!-- Tab 1: Tournaments (ACTIVE based on screen purpose) -->
+<a aria-current="page" class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-xl px-3 py-1 transition-transform duration-100 active:scale-95" href="#tournaments">
+<span class="material-symbols-outlined text-[22px] text-white" data-icon="emoji_events">emoji_events</span>
+<span class="text-label-sm font-label-sm text-white font-bold mt-0.5">Tournaments</span>
+</a>
+<!-- Tab 2: Matches (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:bg-surface-container-low transition-colors duration-150 active:scale-95" href="#matches">
+<span class="material-symbols-outlined text-[22px]" data-icon="scoreboard">scoreboard</span>
+<span class="text-label-sm font-label-sm mt-0.5">Matches</span>
+</a>
+<!-- Tab 3: Teams (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:bg-surface-container-low transition-colors duration-150 active:scale-95" href="#teams">
+<span class="material-symbols-outlined text-[22px]" data-icon="groups">groups</span>
+<span class="text-label-sm font-label-sm mt-0.5">Teams</span>
+</a>
+<!-- Tab 4: Venues (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:bg-surface-container-low transition-colors duration-150 active:scale-95" href="#venues">
+<span class="material-symbols-outlined text-[22px]" data-icon="stadium">stadium</span>
+<span class="text-label-sm font-label-sm mt-0.5">Venues</span>
+</a>
+</nav>
+<!-- Micro-interactions Script -->
+<script>
+    // Simple filter button interaction
+    document.querySelectorAll('section button').forEach(button => {
+      button.addEventListener('click', function(e) {
+        if (this.closest('.flex.items-center.space-x-2')) {
+          const parent = this.parentElement;
+          parent.querySelectorAll('button').forEach(btn => {
+            btn.className = "px-4 py-1.5 rounded-full bg-surface-container-lowest border border-outline-variant text-on-surface-variant hover:bg-surface-container-low text-label-md font-label-md whitespace-nowrap transition-colors";
+          });
+          this.className = "px-4 py-1.5 rounded-full bg-primary-container text-white text-label-md font-label-md whitespace-nowrap shadow-sm";
+        }
+      });
+    });
+  </script>
+</body></html>

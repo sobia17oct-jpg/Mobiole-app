@@ -1,0 +1,19 @@
+{
+  "name": "cricmatch-pro-mobile-app",
+  "version": "1.0.0",
+  "description": "CricMatch Pro - Exact Mobile App implementation from Google Stitch designs with Pitch Precision design system",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "cricket",
+    "mobile-app",
+    "google-stitch",
+    "pitch-precision",
+    "tournament-management"
+  ],
+  "author": "Antigravity",
+  "license": "MIT"
+}
